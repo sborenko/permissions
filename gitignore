@@ -1,2 +1,4 @@
 *.ddp
-*.dcu
+**/*.dcu
+OUT/*.*
+!OUT
