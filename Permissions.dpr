@@ -2,8 +2,8 @@ program Permissions;
 
 uses
   Forms,
-  TextLib in '..\..\Common\TextLib.pas',
-  ParamLib in '..\..\Common\ParamLib.pas',
+  TextLib in '..\Common\TextLib.pas',
+  ParamLib in '..\Common\ParamLib.pas',
   FormMain in 'Src\FormMain.pas' {Form1},
   DModMain in 'Src\DModMain.pas' {DataModule1: TDataModule},
   TreeMngr in 'Src\TreeMngr.pas',
@@ -26,11 +26,14 @@ uses
   FormUsrGrpList in 'Src\FormUsrGrpList.pas' {FrmUsrGrpList},
   FormList in 'Src\FormList.pas',
   PermApps in 'Src\PermApps.pas',
-  FormPermList in 'FormPermList.pas' {FormPermissions},
-  QryLib in '..\..\Common\QryLib.pas',
-  DateLib in '..\..\Common\DateLib.pas',
-  DsLib in '..\..\Common\DsLib.pas',
-  DATABASENAME in 'SRC\DATABASENAME.pas';
+  FormPermList in 'Src\FormPermList.pas' {FormPermissions},
+  QryLib in '..\Common\QryLib.pas',
+  DateLib in '..\Common\DateLib.pas',
+  DsLib in '..\Common\DsLib.pas',
+  DATABASENAME in 'SRC\DATABASENAME.pas',
+  CmnSettings in '..\Common\AllApps\CmnSettings.pas',
+  PwdTypes in '..\Common\Passwords\PwdTypes.pas',
+  VersionInfo in '..\Common\VersionInfo\VersionInfo.pas';
 
 {$R *.res}
 

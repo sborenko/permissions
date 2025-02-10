@@ -5,16 +5,19 @@ interface
 uses Item;
 
 type
-  TPermApp = class(TItem)
+  TPermApps = class(TItem)
   protected
-    class function DataSetName: ShortString;
+    function DataSetName: ShortString; override;
     function DataSetFields: String; override;
   end;
 
 implementation
 
+uses
+  TextLib;
+
 //------------------------------------------------------------------------------
-class function TPermApps.DataSetName: ShortString;
+function TPermApps.DataSetName: ShortString;
 begin
   Result := 'PermApps';
 end;

@@ -3,8 +3,8 @@ unit FormMain;
 interface
 
 uses
-  ActnList, Classes, ComCtrls, Controls, Dialogs, Forms, Graphics, Menus, Messages,
-  ShellApi, SysUtils, Variants, Windows;
+  ActnList, Classes, ComCtrls, Controls, Dialogs, Forms, Graphics, Menus,
+  Messages, ShellApi, SysUtils, Variants, Windows;
 
 type
   TFrmMain = class(TForm)
@@ -34,9 +34,8 @@ var
 implementation
 
 uses
-  App, Permission, Role, RolePermiss, RoleHier, User, UserGroup, GroupUser,
-  UsrGrpHier,
-  DModMain, FormUserList, FormUsrGrpList;
+  App, DModMain, FormUsrGrpList, FormUserList, GroupUser, Permission, Role,
+  RoleHier, RolePermiss, User, UserGroup, UsrGrpHier, VersionInfo;
 
 {$R *.dfm}
 
@@ -45,54 +44,10 @@ procedure TFrmMain.FormCreate(Sender: TObject);
 var
   Msg: String;
 begin
-  Application.Title := 'Permissions' + TAppCmnSetts.GetAppVersion;
-  
+  Application.Title := 'Permissions' + GetAppVersion;
+
   Msg := '';
 
-  with TApp.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
-
-  with TPermission.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
-
-  with TRole.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
-
-  with TRolePermiss.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
-
-  with TRoleHier.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
-
-  with TUser.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
-
-  with TUserGroup.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
-
-  with TGroupUser.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
-
-  with TUsrGrpHier.Create do begin
-    Msg := Msg + GetCreateTblStmt + #13#10#13#10;
-    Free;
-  end;
 
   ShowMessage(Msg);
 end;

@@ -6,7 +6,7 @@ object DmMain: TDmMain
   Height = 158
   Width = 332
   object Database: TDatabase
-    DatabaseName = 'PERMISSIONS'
+    DatabaseName = 'DbMain'
     LoginPrompt = False
     Params.Strings = (
       'USER NAME=SYSDBA'

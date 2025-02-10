@@ -9,13 +9,13 @@ type
 
   TApp = class(TNamedItem)
   protected
-    class function DataSetName: ShortString;
+    function DataSetName: ShortString; override;
   end;
 
 implementation
 
 //------------------------------------------------------------------------------
-class function TApp.DataSetName: ShortString;
+function TApp.DataSetName: ShortString;
 begin
   Result := 'Applications';
 end;
