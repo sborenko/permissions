@@ -2,3 +2,7 @@
 *.txt
 *.exe
 *.dcu
+OUT/*
+!OUT/placeholder
+DCU/*
+!DCU/placeholder
