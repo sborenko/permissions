@@ -11,6 +11,7 @@ type
     Owner, Entity: TItem;
   public
     constructor Create(Owner, Entity: TItem);
+    procedure CreateTable; override;
     function DatasetName: ShortString; override;
     function DatasetFields: String; override;
   end;
@@ -28,6 +29,25 @@ begin
 end;
 
 //------------------------------------------------------------------------------
+procedure TList.CreateTable;
+begin
+  inherited CreateTable;
+
+  Execute(
+    'alter table ' + DatasetName + ' ' +
+      'add foreign key (OwnerId) references ' + Owner.DatasetName +
+        ' (' + Owner.MapFieldName('Id') + ') ' +
+      'on delete cascade'
+  );
+  Execute(
+    'alter table ' + DatasetName + ' ' +
+      'add foreign key (EntityId) references ' + Entity.DatasetName +
+        ' (' + Entity.MapFieldName('Id') + ')' +
+      'on delete cascade'
+  );
+end;
+
+//------------------------------------------------------------------------------
 function TList.DatasetName: ShortString;
 begin
   Result := Owner.DatasetName + Entity.DatasetName;
@@ -38,9 +58,9 @@ function TList.DatasetFields: String;
 begin
   Result := inherited DatasetFields;
   // Идентификатор владельца, например, пользователь.
-  Result := TextUtils.ConcatStr(Result, 'OwnerId Int', ', ');
+  Result := TextUtils.ConcatStr(Result, 'OwnerId Integer not null', ', ');
   // Идентификатор сущностей, которые образуют список, например разрешения
-  Result := TextUtils.ConcatStr(Result, 'EntityId Int', ', ');
+  Result := TextUtils.ConcatStr(Result, 'EntityId Integer not null', ', ');
 end;
 
 end.

@@ -7,6 +7,8 @@ uses
 
 type
   TUser = class(TNamedItem)
+  protected
+    function MapFieldName(Name: ShortString): ShortString; override;
   public
     procedure CreateTable; override;
     procedure DropTable; override;
@@ -16,7 +18,7 @@ type
 implementation
 
 uses
-  Item, Role, Permission, List;
+  Item, Role, Permission, List, SysUtils;
 
 //------------------------------------------------------------------------------
 procedure TUser.CreateTable;
@@ -65,7 +67,21 @@ end;
 //------------------------------------------------------------------------------
 function TUser.DatasetName: ShortString;
 begin
-  Result := 'Users';
+  // Result := 'Users';
+  // Äëÿ ÎÏÈ
+  Result := 'Usrs';
+end;
+
+//------------------------------------------------------------------------------
+function TUser.MapFieldName(Name: ShortString): ShortString;
+begin
+  // Äëÿ ÎÏÈ
+  if Name = 'Id' then
+    Result := 'KdUsr'
+  else if Name = 'Name' then
+    Result := 'NmUsr'
+  else
+    Result := Name;
 end;
 
 end.

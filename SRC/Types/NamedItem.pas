@@ -8,8 +8,6 @@ uses
 type
 
   TNamedItem = class(TItem)
-  private
-//    Name: ShortString;
   protected
     function DataSetFields: String; override;
   end;
@@ -22,8 +20,11 @@ uses
 //------------------------------------------------------------------------------
 function TNamedItem.DataSetFields: String;
 begin
-  Result :=
-    TextUtils.ConcatStr(inherited DataSetFields, 'Name VarChar(30)', ', ');
+  Result := inherited DataSetFields;
+  Result := TextUtils.ConcatStr(Result,
+    MapFieldName('Name') + ' VarChar(30)', ', ');
+  Result := TextUtils.ConcatStr(Result,
+    'Notes blob sub_type 1 segment size 4096', ',');
 end;
 
 end.

@@ -58,6 +58,12 @@ begin
   Perm.DropTable;
   App.DropTable;
 
+  App.CreateTable;
+  Perm.CreateTable;
+  Role.CreateTable;
+  User.CreateTable;
+  UsrGroup.CreateTable;
+
   UsrGroup.Free;
   User.Free;
   Role.Free;

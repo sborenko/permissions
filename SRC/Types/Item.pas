@@ -9,19 +9,20 @@ type
 
   TItem = class(TInterfacedObject)
   private
-//    Id: Integer;
-    procedure Execute(Stmt: ShortString);
-
     procedure RunTblDDLStmt(Stmt: ShortString; IfExists: Boolean);
     procedure RunGenDDLStmt(Stmt: ShortString; IfExists: Boolean);
 
   protected
     function DatasetFields: String; virtual;
+    procedure Execute(Stmt: String);
+
   public
     function DatasetName: ShortString; virtual; abstract;
 
     procedure CreateTable; virtual;
     procedure DropTable; virtual;
+
+    function MapFieldName(Name: ShortString): ShortString; virtual;
   end;
 
 implementation
@@ -33,7 +34,12 @@ uses
 procedure TItem.CreateTable;
 begin
   RunTblDDLStmt(
-    'create table ' + DatasetName + '(' + DatasetFields + ')', false
+    'create table ' + DatasetName + '(' + DatasetFields + ')',
+    false
+  );
+  Execute(
+    'alter table ' + DatasetName + ' ' +
+      'add primary key (' + MapFieldName('Id') + ')'
   );
   RunGenDDLStmt(
     'create sequence ' + DatasetName, false
@@ -57,7 +63,7 @@ end;
 //------------------------------------------------------------------------------
 function TItem.DataSetFields: String;
 begin
-  Result := 'Id Int';
+  Result := MapFieldName('Id') + ' Integer not null';
 end;
 
 //------------------------------------------------------------------------------
@@ -106,7 +112,7 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TItem.Execute(Stmt: ShortString);
+procedure TItem.Execute(Stmt: String);
 var
   Query: TQuery;
 begin
@@ -118,6 +124,12 @@ begin
     ExecSQL;
     Free;
   end;
+end;
+
+//------------------------------------------------------------------------------
+function TItem.MapFieldName(Name: ShortString): ShortString;
+begin
+  Result := Name;
 end;
 
 end.

@@ -24,8 +24,9 @@ type
     MnuPermissions: TMenuItem;
     MnuRoles: TMenuItem;
     procedure FormCreate(Sender: TObject);
-    procedure ActUsersExecute(Sender: TObject);
-    procedure ActUserGroupsExecute(Sender: TObject);
+    procedure ActViewUsers(Sender: TObject);
+    procedure ActViewUsrGroups(Sender: TObject);
+    procedure ActViewPermiss(Sender: TObject);
   end;
 
 var
@@ -35,7 +36,7 @@ implementation
 
 uses
   App, DModMain, FormUsrGrpList, FormUserList, Permission, Role,
-  User, UserGroup, Hier, VersionInfo;
+  User, UserGroup, Hier, VersionInfo, FormPermList;
 
 {$R *.dfm}
 
@@ -44,16 +45,11 @@ procedure TFrmMain.FormCreate(Sender: TObject);
 var
   Msg: String;
 begin
-  Application.Title := 'Permissions' + GetAppVersion;
-
-  Msg := '';
-
-
-  ShowMessage(Msg);
+  Caption := 'Permissions ' + GetAppVersion;
 end;
 
 //------------------------------------------------------------------------------
-procedure TFrmMain.ActUsersExecute(Sender: TObject);
+procedure TFrmMain.ActViewUsers(Sender: TObject);
 begin
   if not Assigned(FrmUsrList) then begin
     FrmUsrList := TFrmUsrList.Create(Self);
@@ -62,12 +58,18 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TFrmMain.ActUserGroupsExecute(Sender: TObject);
+procedure TFrmMain.ActViewUsrGroups(Sender: TObject);
 begin
   if not Assigned(FrmUsrGrpList) then begin
     FrmUsrGrpList := TFrmUsrGrpList.Create(Self);
     FrmUsrGrpList.FormStyle := fsMDIChild;
   end;
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmMain.ActViewPermiss(Sender: TObject);
+begin
+  TFrmPermList.Create(Self).Show;
 end;
 
 end.
