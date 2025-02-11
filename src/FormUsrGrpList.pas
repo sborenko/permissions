@@ -38,7 +38,7 @@ type
     procedure TreeUsrGroupsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
-    procedure LoadTree;
+//    procedure LoadTree;
 
   public
   end;
@@ -54,12 +54,13 @@ uses
 {$R *.dfm}
 
 //------------------------------------------------------------------------------
+{
 procedure TFrmUsrGrpList.LoadTree;
 begin
   if SelectionMode then
   else
 end;
-
+}
 //------------------------------------------------------------------------------
 procedure TFrmUsrGrpList.FormClose(Sender: TObject;
   var Action: TCloseAction);

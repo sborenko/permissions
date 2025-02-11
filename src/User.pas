@@ -3,37 +3,40 @@ unit User;
 interface
 
 uses
-  RoleOwner;
+  NamedItem;
 
 type
-
-  TUser = class(TRoleOwner)
+  TUser = class(TNamedItem)
   public
-    function DataSetName: ShortString; override;
-    function Generator: ShortString;
-    function BeforeInsert: ShortString;
+    procedure Init; override;
+    function DatasetName: ShortString; override;
   end;
 
 implementation
 
+uses
+  RoleOwner, PermOwner;
+
 //------------------------------------------------------------------------------
-function TUser.DataSetName: ShortString;
+procedure TUser.Init;
+begin
+  inherited Init;
+
+  with TRoleOwner.Create(Self) do begin
+    Init;
+    Free;
+  end;
+
+  with TPermOwner.Create(Self) do begin
+    Init;
+    Free;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+function TUser.DatasetName: ShortString;
 begin
   Result := 'Users';
-end;
-
-//------------------------------------------------------------------------------
-function TUser.Generator: ShortString;
-begin
-  Result :=
-    'CREATE SEQUENCE NEW_GENERATOR;'#13#10 +
-    'ALTER SEQUENCE NEW_GENERATOR RESTART WITH 0';
-end;
-
-//------------------------------------------------------------------------------
-function TUser.BeforeInsert: ShortString;
-begin
-//  Result :=
 end;
 
 end.

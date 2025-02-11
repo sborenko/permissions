@@ -3,20 +3,37 @@ unit Role;
 interface
 
 uses
-  AppOwned;
+  NamedItem, RoleOwner, PermOwner;
 
 type
 
-  TRole = class(TAppOwned)
+  TRole = class(TNamedItem)
   // AppId для пользовательской корневой роли - ноль
   public
-    function DataSetName: ShortString; override;
+    procedure Init; override;
+    function DatasetName: ShortString; override;
   end;
 
 implementation
 
 //------------------------------------------------------------------------------
-function TRole.DataSetName: ShortString;
+procedure TRole.Init;
+begin
+  inherited Init;
+
+  with TRoleOwner.Create(Self) do begin
+    Init;
+    Free;
+  end;
+
+  with TPermOwner.Create(Self) do begin
+    Init;
+    Free;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+function TRole.DatasetName: ShortString;
 begin
   Result := 'Roles';
 end;

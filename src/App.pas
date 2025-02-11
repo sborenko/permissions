@@ -8,7 +8,7 @@ uses
 type
 
   TApp = class(TNamedItem)
-  protected
+  public
     function DataSetName: ShortString; override;
   end;
 

@@ -3,16 +3,12 @@ unit RoleHier;
 interface
 
 uses
-  RoleChild;
+  HierItem;
 
 type
-
-  TRoleHier = class(TRoleChild)
-  private
-//    SubroleId: Integer;
+  TRoleHier = class(THierItem)
   public
     function DataSetName: ShortString; override;
-    function DataSetFields: String; override;
   end;
 
 implementation
@@ -24,13 +20,6 @@ uses
 function TRoleHier.DataSetName: ShortString;
 begin
   Result := 'RoleHier';
-end;
-
-//------------------------------------------------------------------------------
-function TRoleHier.DataSetFields: String;
-begin
-  Result :=
-    TextUtils.ConcatStr(inherited DataSetFields, 'SubroleId Int', ', ');
 end;
 
 end.

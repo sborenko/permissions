@@ -35,7 +35,7 @@ implementation
 
 uses
   App, DModMain, FormUsrGrpList, FormUserList, GroupUser, Permission, Role,
-  RoleHier, RolePermiss, User, UserGroup, UsrGrpHier, VersionInfo;
+  RoleHier, {RolePermiss,} User, UserGroup, UsrGrpHier, VersionInfo;
 
 {$R *.dfm}
 

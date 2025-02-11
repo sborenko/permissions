@@ -14,7 +14,6 @@ uses
   Permission in 'Src\Permission.pas',
   Role in 'Src\Role.pas',
   RoleChild in 'Src\RoleChild.pas',
-  RolePermiss in 'Src\RolePermiss.pas',
   RoleHier in 'Src\RoleHier.pas',
   RoleOwner in 'Src\RoleOwner.pas',
   User in 'Src\User.pas',
@@ -33,7 +32,11 @@ uses
   DATABASENAME in 'SRC\DATABASENAME.pas',
   CmnSettings in '..\Common\AllApps\CmnSettings.pas',
   PwdTypes in '..\Common\Passwords\PwdTypes.pas',
-  VersionInfo in '..\Common\VersionInfo\VersionInfo.pas';
+  VersionInfo in '..\Common\VersionInfo\VersionInfo.pas',
+  HierItem in 'SRC\HierItem.pas',
+  ChildDataset in 'SRC\ChildDataset.pas',
+  PermOwner in 'SRC\PermOwner.pas',
+  UserOwner in 'SRC\UserOwner.pas';
 
 {$R *.res}
 

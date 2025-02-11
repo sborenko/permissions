@@ -8,11 +8,10 @@ uses
 type
 
   TUsrGrpHier = class(TUsrGrpChild)
-  private
-//    SubgroupId: Integer;
   protected
-    function DataSetName: ShortString; override;
     function DataSetFields: String; override;
+  public
+    function DataSetName: ShortString; override;
   end;
 
 implementation

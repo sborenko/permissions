@@ -3,16 +3,41 @@ unit UserGroup;
 interface
 
 uses
-  RoleOwner;
+  NamedItem;
 
 type
 
-  TUserGroup = class(TRoleOwner)
+  TUserGroup = class(TNamedItem)
   public
+    procedure Init; override;
     function DataSetName: ShortString; override;
   end;
-  
+
 implementation
+
+uses
+  UserOwner, RoleOwner, PermOwner;
+
+//------------------------------------------------------------------------------
+procedure TUserGroup.Init;
+begin
+  inherited Init;
+
+  with TUserOwner.Create(Self) do begin
+    Init;
+    Free;
+  end;
+
+  with TRoleOwner.Create(Self) do begin
+    Init;
+    Free;
+  end;
+
+  with TPermOwner.Create(Self) do begin
+    Init;
+    Free;
+  end;
+end;
 
 //------------------------------------------------------------------------------
 function TUserGroup.DataSetName: ShortString;

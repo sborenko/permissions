@@ -2,44 +2,64 @@ unit Item;
 
 interface
 
+uses
+  Classes;
+
 type
 
-  TItem = class
+  TItem = class(TInterfacedObject)
   private
 //    Id: Integer;
     procedure CreateTable;
-    procedure Drop; virtual;
+    procedure DropTable;
 
-    procedure CreateGenerator;
     procedure Execute(Stmt: ShortString);
 
+    procedure RunTblDDLStmt(Stmt: ShortString; IfExists: Boolean);
+    procedure RunGenDDLStmt(Stmt: ShortString; IfExists: Boolean);
+
   protected
-    function TblCreateStmt: String;
-    function DatasetName: ShortString; virtual; abstract;
     function DatasetFields: String; virtual;
   public
-    procedure Init;
+    function DatasetName: ShortString; virtual; abstract;
+    procedure Init; virtual;
   end;
 
 implementation
 
 uses
-  DbTables, QryLib, TextLib;
+  DbTables, QryLib, SysUtils, TextLib;
 
 //------------------------------------------------------------------------------
 procedure TItem.Init;
 begin
-  Drop;
+  DropTable;
   CreateTable;
 end;
 
 //------------------------------------------------------------------------------
-function TItem.TblCreateStmt: String;
+procedure TItem.CreateTable;
 begin
-  Result :=
-    'create table ' + DatasetName + '(' +
-      DatasetFields +
-    ')';
+  RunTblDDLStmt(
+    'create table ' + DatasetName + '(' + DatasetFields + ')', false
+  );
+  RunGenDDLStmt(
+    'create sequence ' + DatasetName, false
+  );
+  Execute(
+    'alter sequence ' + DatasetName + ' restart with 0'
+  );
+end;
+
+//------------------------------------------------------------------------------
+procedure TItem.DropTable;
+begin
+  RunTblDDLStmt(
+    'drop table ' + DatasetName, true
+  );
+  RunGenDDLStmt(
+    'drop generator ' + DatasetName, true
+  );
 end;
 
 //------------------------------------------------------------------------------
@@ -49,31 +69,47 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TItem.CreateTable;
+procedure TItem.RunTblDDLStmt(Stmt: ShortString; IfExists: Boolean);
+var
+  NotClause: ShortString;
 begin
-  Execute(TblCreateStmt);
-  CreateGenerator;
+  if IfExists then
+    NotClause := ''
+  else
+    NotClause := 'not ';
+
+  Execute(
+    'execute block as begin ' +
+      'if (' + NotClause + 'exists(' +
+        'select 1 ' +
+        'from rdb$relations ' +
+        'where rdb$relation_name = "' + UpperCase(DatasetName) + '"' +
+      ')) ' +
+      'then execute statement "' + Stmt + '"; ' +
+    'end'
+  );
 end;
 
 //------------------------------------------------------------------------------
-procedure TItem.Drop;
+procedure TItem.RunGenDDLStmt(Stmt: ShortString; IfExists: Boolean);
+var
+  NotClause: ShortString;
 begin
-  Execute(
-    'drop table ' + DatasetName
-  );
-  Execute(
-    'drop generator ' + DatasetName
-  );
-end;
+  if IfExists then
+    NotClause := ''
+  else
+    NotClause := 'not ';
 
-//------------------------------------------------------------------------------
-procedure TItem.CreateGenerator;
-begin
   Execute(
-    'create sequence ' + DatasetName
-  );
-  Execute(
-    'alter sequence ' + DatasetName + ' restart with 0'
+    'execute block as begin ' +
+      'if (' + NotClause + 'exists(' +
+        'select 1 ' +
+        'from rdb$generators ' +
+        'where coalesce(RDB$SYSTEM_FLAG, 0) = 0 ' +
+          'and rdb$generator_name = "' + UpperCase(DatasetName) + '"' +
+      ')) ' +
+      'then execute statement "' + Stmt + '"; ' +
+    'end'
   );
 end;
 

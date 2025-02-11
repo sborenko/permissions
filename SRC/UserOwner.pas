@@ -1,4 +1,4 @@
-unit RoleOwner;
+unit UserOwner;
 
 interface
 
@@ -6,21 +6,17 @@ uses
   ChildDataset;
 
 type
-  TRoleOwner = class(TChildDataset)
-
+  TUserOwner = class(TChildDataset)
   public
     function DatasetName: ShortString; override;
   end;
 
 implementation
 
-uses
-  TextLib;
-
 //------------------------------------------------------------------------------
-function TRoleOwner.DatasetName: ShortString;
+function TUserOwner.DatasetName: ShortString;
 begin
-  Result := ParentDatasetName + 'Roles';
+  Result := ParentDatasetName + 'Users';
 end;
 
 end.

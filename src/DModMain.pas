@@ -19,7 +19,7 @@ var
 implementation
 
 uses
-  App, GroupUser, Permission, Role, RoleHier, RolePermiss, User, UserGroup,
+  App, GroupUser, Permission, Role, RoleHier, {RolePermiss,} User, UserGroup,
   UsrGrpHier;
 
 {$R *.dfm}
@@ -39,6 +39,12 @@ end;
 //------------------------------------------------------------------------------
 procedure TDmMain.EmptyDatabase;
 begin
+{
+  with TRolePermiss.Create do begin
+    Init;
+    Free;
+  end;
+}
   with TApp.Create do begin
     Init;
     Free;
@@ -48,13 +54,8 @@ begin
     Init;
     Free;
   end;
-
+{
   with TRole.Create do begin
-    Init;
-    Free;
-  end;
-
-  with TRolePermiss.Create do begin
     Init;
     Free;
   end;
@@ -83,6 +84,7 @@ begin
     Init;
     Free;
   end;
+}  
 end;
 
 end.
