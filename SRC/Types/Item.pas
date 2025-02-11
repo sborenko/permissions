@@ -10,9 +10,6 @@ type
   TItem = class(TInterfacedObject)
   private
 //    Id: Integer;
-    procedure CreateTable;
-    procedure DropTable;
-
     procedure Execute(Stmt: ShortString);
 
     procedure RunTblDDLStmt(Stmt: ShortString; IfExists: Boolean);
@@ -22,20 +19,15 @@ type
     function DatasetFields: String; virtual;
   public
     function DatasetName: ShortString; virtual; abstract;
-    procedure Init; virtual;
+
+    procedure CreateTable; virtual;
+    procedure DropTable; virtual;
   end;
 
 implementation
 
 uses
   DbTables, QryLib, SysUtils, TextLib;
-
-//------------------------------------------------------------------------------
-procedure TItem.Init;
-begin
-  DropTable;
-  CreateTable;
-end;
 
 //------------------------------------------------------------------------------
 procedure TItem.CreateTable;

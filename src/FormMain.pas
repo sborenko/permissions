@@ -34,8 +34,8 @@ var
 implementation
 
 uses
-  App, DModMain, FormUsrGrpList, FormUserList, GroupUser, Permission, Role,
-  RoleHier, {RolePermiss,} User, UserGroup, UsrGrpHier, VersionInfo;
+  App, DModMain, FormUsrGrpList, FormUserList, Permission, Role,
+  User, UserGroup, Hier, VersionInfo;
 
 {$R *.dfm}
 

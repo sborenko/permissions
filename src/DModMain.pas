@@ -19,8 +19,8 @@ var
 implementation
 
 uses
-  App, GroupUser, Permission, Role, RoleHier, {RolePermiss,} User, UserGroup,
-  UsrGrpHier;
+  App, Permission, Role, User, UserGroup,
+  Hier;
 
 {$R *.dfm}
 
@@ -38,53 +38,31 @@ end;
 
 //------------------------------------------------------------------------------
 procedure TDmMain.EmptyDatabase;
+var
+  UsrGroup: TUsrGroup;
+  User: TUser;
+  Role: TRole;
+  Perm: TPermis;
+  App: TApp;
 begin
-{
-  with TRolePermiss.Create do begin
-    Init;
-    Free;
-  end;
-}
-  with TApp.Create do begin
-    Init;
-    Free;
-  end;
+  UsrGroup := TUsrGroup.Create;
+  User := TUser.Create;
+  Role := TRole.Create;
+  Perm := TPermis.Create;
+  App := TApp.Create;
 
-  with TPermission.Create do begin
-    Init;
-    Free;
-  end;
-{
-  with TRole.Create do begin
-    Init;
-    Free;
-  end;
+  // Удаляем, начиная со сложных объектов
+  UsrGroup.DropTable;
+  User.DropTable;
+  Role.DropTable;
+  Perm.DropTable;
+  App.DropTable;
 
-  with TRoleHier.Create do begin
-    Init;
-    Free;
-  end;
-
-  with TUser.Create do begin
-    Init;
-    Free;
-  end;
-
-  with TUserGroup.Create do begin
-    Init;
-    Free;
-  end;
-
-  with TGroupUser.Create do begin
-    Init;
-    Free;
-  end;
-
-  with TUsrGrpHier.Create do begin
-    Init;
-    Free;
-  end;
-}  
+  UsrGroup.Free;
+  User.Free;
+  Role.Free;
+  Perm.Free;
+  App.Free;
 end;
 
 end.
