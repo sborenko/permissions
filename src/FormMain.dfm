@@ -1,8 +1,8 @@
 object FrmMain: TFrmMain
-  Left = 100
-  Top = 225
-  Width = 1070
-  Height = 682
+  Left = 162
+  Top = 9
+  Width = 994
+  Height = 701
   Caption = 'FrmMain'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -13,6 +13,7 @@ object FrmMain: TFrmMain
   FormStyle = fsMDIForm
   Menu = MainMenu
   OldCreateOrder = False
+  WindowState = wsMaximized
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -52,17 +53,18 @@ object FrmMain: TFrmMain
     end
     object ActPermissions: TAction
       Caption = '&'#1056#1072#1079#1088#1077#1096#1077#1085#1080#1103
+      OnExecute = ActViewPermiss
     end
     object ActRoles: TAction
       Caption = '&'#1056#1086#1083#1080
     end
     object ActUsers: TAction
       Caption = '&'#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
-      OnExecute = ActUsersExecute
+      OnExecute = ActViewUsers
     end
     object ActUserGroups: TAction
       Caption = '&'#1043#1088#1091#1087#1087#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
-      OnExecute = ActUserGroupsExecute
+      OnExecute = ActViewUsrGroups
     end
   end
 end

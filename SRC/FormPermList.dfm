@@ -1,7 +1,7 @@
-object FormPermissions: TFormPermissions
-  Left = 666
-  Top = 356
-  Width = 790
+object FrmPermList: TFrmPermList
+  Left = 362
+  Top = 115
+  Width = 732
   Height = 583
   Caption = 'Permissions'
   Color = clBtnFace
@@ -10,70 +10,116 @@ object FormPermissions: TFormPermissions
   Font.Height = -11
   Font.Name = 'MS Sans Serif'
   Font.Style = []
+  FormStyle = fsMDIChild
   OldCreateOrder = False
+  Position = poDefault
+  Visible = True
+  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
-  object PanelRight: TPanel
-    Left = 597
+  object SplitterMain: TSplitter
+    Left = 466
     Top = 0
-    Width = 185
+    Height = 508
+    Align = alRight
+  end
+  object PanelRight: TPanel
+    Left = 469
+    Top = 0
+    Width = 255
     Height = 508
     Align = alRight
     TabOrder = 0
-    object LblAffectedApps: TLabel
-      Left = 8
-      Top = 8
-      Width = 100
-      Height = 13
-      Caption = 'Affected Applications'
+    object SplitterRight: TSplitter
+      Left = 1
+      Top = 273
+      Width = 253
+      Height = 5
+      Cursor = crVSplit
+      Align = alTop
+      Beveled = True
     end
-    object LblFilter: TLabel
-      Left = 8
-      Top = 272
-      Width = 22
-      Height = 13
-      Caption = 'Filter'
-    end
-    object LblGrantedUsers: TLabel
-      Left = 8
-      Top = 368
-      Width = 68
-      Height = 13
-      Caption = 'Granted Users'
-    end
-    object CheckListBox1: TCheckListBox
-      Left = 8
-      Top = 24
-      Width = 169
-      Height = 241
-      ItemHeight = 13
+    object PanelApps: TPanel
+      Left = 1
+      Top = 1
+      Width = 253
+      Height = 272
+      Align = alTop
+      BevelOuter = bvNone
       TabOrder = 0
+      DesignSize = (
+        253
+        272)
+      object LblAffectedApps: TLabel
+        Left = 8
+        Top = 8
+        Width = 100
+        Height = 13
+        Caption = 'Affected Applications'
+      end
+      object ChLstBox: TCheckListBox
+        Left = 8
+        Top = 24
+        Width = 239
+        Height = 241
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        ItemHeight = 13
+        TabOrder = 0
+      end
     end
-    object DBComboBox1: TDBComboBox
-      Left = 8
-      Top = 288
-      Width = 169
-      Height = 21
-      ItemHeight = 13
+    object PanelFilter: TPanel
+      Left = 1
+      Top = 278
+      Width = 253
+      Height = 229
+      Align = alClient
+      BevelOuter = bvNone
       TabOrder = 1
-    end
-    object DbgrGrantedUsers: TDBGrid
-      Left = 8
-      Top = 384
-      Width = 168
-      Height = 120
-      TabOrder = 2
-      TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'MS Sans Serif'
-      TitleFont.Style = []
+      DesignSize = (
+        253
+        229)
+      object LblFilter: TLabel
+        Left = 8
+        Top = 8
+        Width = 22
+        Height = 13
+        Caption = 'Filter'
+      end
+      object LblGrantedUsers: TLabel
+        Left = 8
+        Top = 44
+        Width = 68
+        Height = 13
+        Caption = 'Granted Users'
+      end
+      object DbgrGrantedUsers: TDBGrid
+        Left = 8
+        Top = 64
+        Width = 241
+        Height = 153
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'MS Sans Serif'
+        TitleFont.Style = []
+      end
+      object DBComboBox1: TDBComboBox
+        Left = 8
+        Top = 20
+        Width = 241
+        Height = 21
+        Anchors = [akLeft, akTop, akRight]
+        ItemHeight = 13
+        TabOrder = 1
+      end
     end
   end
   object PanelBottom: TPanel
     Left = 0
     Top = 508
-    Width = 782
+    Width = 724
     Height = 41
     Align = alBottom
     TabOrder = 1
@@ -81,7 +127,7 @@ object FormPermissions: TFormPermissions
   object DBGrid1: TDBGrid
     Left = 0
     Top = 0
-    Width = 597
+    Width = 466
     Height = 508
     Align = alClient
     TabOrder = 2

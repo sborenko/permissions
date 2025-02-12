@@ -1,13 +1,12 @@
-unit Permission;
+unit PermApp;
 
 interface
 
 uses
-  NamedItem;
+  Item;
 
 type
-
-  TPermission = class(TNamedItem)
+  TPermApp = class(TItem)
   public
     function DatasetName: ShortString; override;
     function DatasetFields: String; override;
@@ -19,16 +18,17 @@ uses
   TextLib;
 
 //------------------------------------------------------------------------------
-function TPermission.DatasetName: ShortString;
+function TPermApp.DatasetName;
 begin
-  Result := 'Permissions';
+  Result := 'PermApp';
 end;
 
 //------------------------------------------------------------------------------
-function TPermission.DatasetFields: String;
+function TPermApp.DatasetFields: String;
 begin
-  Result :=
-    TextUtils.ConcatStr(inherited DatasetFields, 'AllApps Char(1)', ',');
+  Result := inherited DatasetFields;
+  Result := TextUtils.ConcatStr(Result, 'PermId Integer not null', ',');
+  Result := TextUtils.ConcatStr(Result, 'AppId Integer not null', ',');
 end;
 
 end.

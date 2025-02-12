@@ -19,8 +19,8 @@ var
 implementation
 
 uses
-  App, GroupUser, Permission, Role, RoleHier, {RolePermiss,} User, UserGroup,
-  UsrGrpHier;
+  App, PermApp, Permission, Role, User, UserGroup,
+  Hier;
 
 {$R *.dfm}
 
@@ -38,53 +38,45 @@ end;
 
 //------------------------------------------------------------------------------
 procedure TDmMain.EmptyDatabase;
+var
+  UsrGroup: TUsrGroup;
+  User: TUser;
+  Role: TRole;
+  PermApp: TPermApp;
+  Perm: TPermis;
+  App: TApp;
 begin
-{
-  with TRolePermiss.Create do begin
-    Init;
-    Free;
-  end;
-}
-  with TApp.Create do begin
-    Init;
-    Free;
-  end;
+  // Готовим объекты
+  UsrGroup := TUsrGroup.Create;
+  User := TUser.Create;
+  Role := TRole.Create;
+  PermApp := TPermApp.Create;
+  Perm := TPermis.Create;
+  App := TApp.Create;
 
-  with TPermission.Create do begin
-    Init;
-    Free;
-  end;
-{
-  with TRole.Create do begin
-    Init;
-    Free;
-  end;
+  // Удаляем, начиная со сложных объектов
+  UsrGroup.DropTable;
+  User.DropTable;
+  Role.DropTable;
+  PermApp.DropTable;
+  Perm.DropTable;
+  App.DropTable;
 
-  with TRoleHier.Create do begin
-    Init;
-    Free;
-  end;
+  // Создаём, начиная с простых
+  App.CreateTable;
+  Perm.CreateTable;
+  PermApp.CreateTable;
+  Role.CreateTable;
+  User.CreateTable;
+  UsrGroup.CreateTable;
 
-  with TUser.Create do begin
-    Init;
-    Free;
-  end;
-
-  with TUserGroup.Create do begin
-    Init;
-    Free;
-  end;
-
-  with TGroupUser.Create do begin
-    Init;
-    Free;
-  end;
-
-  with TUsrGrpHier.Create do begin
-    Init;
-    Free;
-  end;
-}  
+  // Освобождаем память
+  UsrGroup.Free;
+  User.Free;
+  Role.Free;
+  Perm.Free;
+  App.Free;
+  PermApp.Free;
 end;
 
 end.
