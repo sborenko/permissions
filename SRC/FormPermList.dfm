@@ -62,7 +62,6 @@ object FrmPermList: TFrmPermList
         Top = 24
         Width = 239
         Height = 241
-        OnClickCheck = ChLstBoxClickCheck
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
         TabOrder = 0

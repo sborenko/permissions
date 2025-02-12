@@ -22,7 +22,6 @@ type
     LblAffectedApps: TLabel;
     LblGrantedUsers: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure ChLstBoxClickCheck(Sender: TObject);
   private
     { Private declarations }
   public
@@ -40,13 +39,6 @@ procedure TFrmPermList.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   Action := caFree;
-end;
-
-procedure TFrmPermList.ChLstBoxClickCheck(Sender: TObject);
-begin
-  ChLstBox.
-  if ChLstBox.Selected[0] then
-    ShowMessage('Hi');
 end;
 
 end.
