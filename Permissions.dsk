@@ -10,14 +10,14 @@ File_7=SourceModule,'C:\OPI\PROJECTS\Common\AllApps\CmnSettings.pas',0,1,1,1,1,0
 
 [Modules]
 Module0=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
-Module1=C:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas
-Module2=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\UserGroup.pas
-Module3=C:\OPI\PROJECTS\PERMISSIONS\SRC\Types\List.pas
-Module4=C:\OPI\PROJECTS\PERMISSIONS\SRC\Types\PermApp.pas
-Module5=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\User.pas
-Module6=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\Item.pas
-Module7=C:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
-Module8=C:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr
+Module1=C:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
+Module2=C:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr
+Module3=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\UserGroup.pas
+Module4=C:\OPI\PROJECTS\PERMISSIONS\SRC\Types\List.pas
+Module5=C:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas
+Module6=C:\OPI\PROJECTS\PERMISSIONS\SRC\Types\PermApp.pas
+Module7=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\User.pas
+Module8=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\Item.pas
 Count=9
 EditWindowCount=1
 
@@ -26,7 +26,12 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[C:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas]
+[C:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -37,6 +42,11 @@ FormState=0
 FormOnTop=0
 
 [C:\OPI\PROJECTS\PERMISSIONS\SRC\Types\List.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -52,16 +62,6 @@ FormState=0
 FormOnTop=0
 
 [C:\OPI\PROJECTS\PERMISSIONS\Src\Types\Item.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -103,7 +103,7 @@ LeftPanelData=000004000000000000000000000000000000000000000000000100000000000000
 RightPanelSize=0
 BottomPanelSize=0
 BottomPanelClients=MessageView@EditWindow0
-BottomPanelData=00000400010000000B0000004D65737361676556696577000000000000000000000000000000000001000000000000000000000000FFFFFFFF
+BottomPanelData=00000400010000000B0000004D657373616765566965775C070000000000000255000000000000000100000000000000000000000001000000005C0700000000000001000000005C0700000B0000004D65737361676556696577FFFFFFFF
 
 [View0]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr
@@ -114,9 +114,9 @@ LeftCol=1
 
 [View1]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
-CursorX=14
-CursorY=1
-TopLine=1
+CursorX=3
+CursorY=204
+TopLine=204
 LeftCol=1
 
 [View2]
@@ -158,14 +158,14 @@ LeftCol=1
 Module=C:\OPI\PROJECTS\PERMISSIONS\SRC\Types\List.pas
 CursorX=1
 CursorY=25
-TopLine=39
+TopLine=31
 LeftCol=1
 
 [View8]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\Types\UserGroup.pas
-CursorX=5
-CursorY=100
-TopLine=83
+CursorX=1
+CursorY=1
+TopLine=1
 LeftCol=1
 
 [Watches]
@@ -205,8 +205,8 @@ Left=-1
 Top=7
 Width=1840
 Height=112
-MaxLeft=-4
-MaxTop=-4
+MaxLeft=-1
+MaxTop=-1
 MaxWidth=1892
 MaxHeight=112
 ClientWidth=1884
@@ -478,11 +478,11 @@ Visible=0
 State=0
 Left=12
 Top=0
-Width=1891
+Width=1872
 Height=85
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1891
+ClientWidth=1872
 ClientHeight=85
 TBDockHeight=85
 LRDockWidth=443
