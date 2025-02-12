@@ -5,71 +5,41 @@ File_2=SourceModule,'C:\OPI\PROJECTS\PERMISSIONS\SRC\HierItem.pas',0,1,1,11,17,0
 File_3=SourceModule,'C:\OPI\PROJECTS\Common\VersionInfo\VersionInfo.pas',0,1,1,1,1,0,0
 File_4=SourceModule,'C:\OPI\PROJECTS\PERMISSIONS\Src\TreeMngr.pas',0,1,1,23,25,0,0
 File_5=SourceModule,'C:\OPI\PROJECTS\Common\Passwords\PwdTypes.pas',0,1,1,1,1,0,0
-File_6=SourceModule,'C:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas',0,1,1,1,1,0,0
-File_7=SourceModule,'C:\OPI\PROJECTS\PERMISSIONS\Src\FormUserList.pas',0,1,1,1,1,0,0
-File_8=SourceModule,'C:\OPI\PROJECTS\Common\AllApps\CmnSettings.pas',0,1,1,1,1,0,0
+File_6=SourceModule,'C:\OPI\PROJECTS\PERMISSIONS\Src\FormUserList.pas',0,1,1,1,1,0,0
+File_7=SourceModule,'C:\OPI\PROJECTS\Common\AllApps\CmnSettings.pas',0,1,1,1,1,0,0
 
 [Modules]
-Module0=C:\OPI\PROJECTS\PERMISSIONS\Src\AppOwned.pas
-Module1=C:\OPI\PROJECTS\PERMISSIONS\Src\App.pas
-Module2=C:\OPI\PROJECTS\PERMISSIONS\Src\UserGroup.pas
-Module3=C:\OPI\PROJECTS\PERMISSIONS\Src\User.pas
-Module4=C:\OPI\PROJECTS\PERMISSIONS\SRC\UserOwner.pas
-Module5=C:\OPI\PROJECTS\PERMISSIONS\SRC\PermOwner.pas
-Module6=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleOwner.pas
-Module7=C:\OPI\PROJECTS\PERMISSIONS\SRC\ChildDataset.pas
-Module8=C:\OPI\PROJECTS\PERMISSIONS\Src\Item.pas
-Module9=C:\OPI\PROJECTS\PERMISSIONS\Src\NamedItem.pas
-Module10=C:\OPI\PROJECTS\PERMISSIONS\Src\Permission.pas
-Module11=C:\OPI\PROJECTS\PERMISSIONS\Src\Role.pas
-Module12=C:\OPI\PROJECTS\PERMISSIONS\Src\PermApps.pas
-Module13=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleChild.pas
-Module14=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleHier.pas
-Module15=C:\OPI\PROJECTS\PERMISSIONS\Src\UsrGrpChild.pas
-Module16=C:\OPI\PROJECTS\PERMISSIONS\Src\FormUsrGrpList.pas
-Module17=C:\OPI\PROJECTS\PERMISSIONS\Src\UsrGrpHier.pas
-Module18=C:\OPI\PROJECTS\PERMISSIONS\Src\GroupUser.pas
-Module19=C:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas
-Module20=C:\OPI\PROJECTS\PERMISSIONS\Src\FormMain.pas
-Count=21
+Module0=C:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
+Module1=C:\OPI\PROJECTS\PERMISSIONS\Src\AppOwned.pas
+Module2=C:\OPI\PROJECTS\PERMISSIONS\Src\Item.pas
+Module3=C:\OPI\PROJECTS\PERMISSIONS\Src\NamedItem.pas
+Module4=C:\OPI\PROJECTS\PERMISSIONS\Src\Permission.pas
+Module5=C:\OPI\PROJECTS\PERMISSIONS\SRC\ChildDataset.pas
+Module6=C:\OPI\PROJECTS\PERMISSIONS\SRC\PermOwner.pas
+Module7=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleOwner.pas
+Module8=C:\OPI\PROJECTS\PERMISSIONS\SRC\UserOwner.pas
+Module9=C:\OPI\PROJECTS\PERMISSIONS\Src\Role.pas
+Module10=C:\OPI\PROJECTS\PERMISSIONS\Src\User.pas
+Module11=C:\OPI\PROJECTS\PERMISSIONS\Src\UserGroup.pas
+Module12=C:\OPI\PROJECTS\PERMISSIONS\Src\App.pas
+Module13=C:\OPI\PROJECTS\PERMISSIONS\Src\PermApps.pas
+Module14=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleChild.pas
+Module15=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleHier.pas
+Module16=C:\OPI\PROJECTS\PERMISSIONS\Src\UsrGrpChild.pas
+Module17=C:\OPI\PROJECTS\PERMISSIONS\Src\FormUsrGrpList.pas
+Module18=C:\OPI\PROJECTS\PERMISSIONS\Src\UsrGrpHier.pas
+Module19=C:\OPI\PROJECTS\PERMISSIONS\Src\GroupUser.pas
+Module20=C:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas
+Module21=C:\OPI\PROJECTS\PERMISSIONS\Src\FormMain.pas
+Count=22
 EditWindowCount=1
 
+[C:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=1
+
 [C:\OPI\PROJECTS\PERMISSIONS\Src\AppOwned.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\Src\App.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\Src\UserGroup.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\Src\User.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\SRC\UserOwner.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\SRC\PermOwner.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\Src\RoleOwner.pas]
-ModuleType=SourceModule
-FormState=0
-FormOnTop=0
-
-[C:\OPI\PROJECTS\PERMISSIONS\SRC\ChildDataset.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -89,7 +59,42 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
+[C:\OPI\PROJECTS\PERMISSIONS\SRC\ChildDataset.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\OPI\PROJECTS\PERMISSIONS\SRC\PermOwner.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\OPI\PROJECTS\PERMISSIONS\Src\RoleOwner.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\OPI\PROJECTS\PERMISSIONS\SRC\UserOwner.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
 [C:\OPI\PROJECTS\PERMISSIONS\Src\Role.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\OPI\PROJECTS\PERMISSIONS\Src\User.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\OPI\PROJECTS\PERMISSIONS\Src\UserGroup.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[C:\OPI\PROJECTS\PERMISSIONS\Src\App.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -139,7 +144,7 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[C:\OPI\PROJECTS\PERMISSIONS\ProjectGroup1.bpg]
+[C:\OPI\PROJECTS\PERMISSIONS\SRC\ProjectGroup1.bpg]
 FormState=0
 FormOnTop=0
 
@@ -148,8 +153,8 @@ FormState=0
 FormOnTop=0
 
 [EditWindow0]
-ViewCount=21
-CurrentView=6
+ViewCount=22
+CurrentView=7
 View0=0
 View1=1
 View2=2
@@ -171,6 +176,7 @@ View17=17
 View18=18
 View19=19
 View20=20
+View21=21
 CodeExplorer=CodeExplorer@EditWindow0
 MessageView=MessageView@EditWindow0
 Create=1
@@ -182,9 +188,9 @@ Width=1911
 Height=956
 MaxLeft=-4
 MaxTop=104
-MaxWidth=1883
+MaxWidth=1888
 MaxHeight=1100
-ClientWidth=1875
+ClientWidth=1880
 ClientHeight=1066
 LeftPanelSize=460
 LeftPanelClients=DockSite0
@@ -192,7 +198,7 @@ LeftPanelData=000004000000000000000000000000000000000000000000000100000000000000
 RightPanelSize=0
 BottomPanelSize=0
 BottomPanelClients=MessageView@EditWindow0
-BottomPanelData=00000400010000000B0000004D65737361676556696577530700000000000002EF00000000000000010000000000000000000000000100000000530700000B0000004D65737361676556696577FFFFFFFF
+BottomPanelData=00000400010000000B0000004D65737361676556696577000000000000000000000000000000000001000000000000000000000000FFFFFFFF
 
 [View0]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\FormMain.pas
@@ -244,97 +250,104 @@ TopLine=1
 LeftCol=1
 
 [View7]
+Module=C:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
+CursorX=1
+CursorY=1
+TopLine=1
+LeftCol=1
+
+[View8]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleHier.pas
 CursorX=1
 CursorY=2
 TopLine=1
 LeftCol=1
 
-[View8]
+[View9]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleChild.pas
 CursorX=1
 CursorY=10
 TopLine=1
 LeftCol=1
 
-[View9]
+[View10]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\PermApps.pas
 CursorX=9
 CursorY=11
 TopLine=1
 LeftCol=1
 
-[View10]
+[View11]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\App.pas
 CursorX=1
 CursorY=11
 TopLine=1
 LeftCol=1
 
-[View11]
+[View12]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\UserGroup.pas
 CursorX=13
 CursorY=26
 TopLine=9
 LeftCol=1
 
-[View12]
+[View13]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\User.pas
 CursorX=1
 CursorY=34
 TopLine=16
 LeftCol=1
 
-[View13]
+[View14]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\Role.pas
 CursorX=1
 CursorY=33
 TopLine=19
 LeftCol=1
 
-[View14]
+[View15]
 Module=C:\OPI\PROJECTS\PERMISSIONS\SRC\UserOwner.pas
 CursorX=49
 CursorY=11
 TopLine=1
 LeftCol=1
 
-[View15]
+[View16]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\RoleOwner.pas
 CursorX=3
 CursorY=6
 TopLine=1
 LeftCol=1
 
-[View16]
+[View17]
 Module=C:\OPI\PROJECTS\PERMISSIONS\SRC\PermOwner.pas
 CursorX=1
 CursorY=1
 TopLine=1
 LeftCol=1
 
-[View17]
+[View18]
 Module=C:\OPI\PROJECTS\PERMISSIONS\SRC\ChildDataset.pas
 CursorX=45
 CursorY=18
 TopLine=3
 LeftCol=1
 
-[View18]
+[View19]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\Permission.pas
 CursorX=48
 CursorY=9
 TopLine=13
 LeftCol=1
 
-[View19]
+[View20]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\NamedItem.pas
 CursorX=23
 CursorY=10
 TopLine=1
 LeftCol=1
 
-[View20]
+[View21]
 Module=C:\OPI\PROJECTS\PERMISSIONS\Src\Item.pas
 CursorX=1
 CursorY=10
@@ -381,9 +394,9 @@ Width=1840
 Height=112
 MaxLeft=-1
 MaxTop=-1
-MaxWidth=1883
+MaxWidth=1888
 MaxHeight=112
-ClientWidth=1875
+ClientWidth=1880
 ClientHeight=78
 
 [ProjectManager]
@@ -465,7 +478,7 @@ LRDockWidth=284
 Dockable=0
 SplitPos=128
 ArrangeBy=Name
-SelectedItem=
+SelectedItem=Caption
 ExpandedItems=Anchors,Constraints,DataSet.UpdateObject,Font.Style,Title
 HiddenCategories=
 
@@ -652,13 +665,13 @@ Visible=0
 State=0
 Left=12
 Top=0
-Width=1863
-Height=239
+Width=1891
+Height=85
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1863
-ClientHeight=239
-TBDockHeight=239
+ClientWidth=1891
+ClientHeight=85
+TBDockHeight=85
 LRDockWidth=443
 Dockable=1
 
