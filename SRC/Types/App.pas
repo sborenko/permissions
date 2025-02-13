@@ -10,7 +10,7 @@ type
   TApp = class(TNamedItem)
   public
     function DataSetName: ShortString; override;
-    function MapFieldName(Name: ShortString): ShortString; override;
+    function FieldName(Name: ShortString): ShortString; override;
   end;
 
 implementation
@@ -18,11 +18,11 @@ implementation
 //------------------------------------------------------------------------------
 function TApp.DataSetName: ShortString;
 begin
-  Result := 'Apps';
+  Result := 'App';
 end;
 
 //------------------------------------------------------------------------------
-function TApp.MapFieldName(Name: ShortString): ShortString; 
+function TApp.FieldName(Name: ShortString): ShortString; 
 begin
   // Äëÿ ÎÏÈ
   if Name = 'Id' then

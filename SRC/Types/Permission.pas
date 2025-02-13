@@ -7,7 +7,7 @@ uses
 
 type
 
-  TPermis = class(TNamedItem)
+  TPerm = class(TNamedItem)
   private
     QryPerms, QryAffApps, QryGrantUsrs: TQuery;
 
@@ -24,7 +24,7 @@ type
     function DatasetName: ShortString; override;
     function DatasetFields: String; override;
 
-    function Run(FilterAppId: Integer): TPermission;
+    class function Run(FilterAppId: Integer): TPerm;
 
     procedure SetFilter(AppId: Integer);
     procedure OpenPerms;
@@ -49,13 +49,13 @@ type
 implementation
 
 uses
-  App, Item, List, QryLib, TextLib;
+  App, Item, List, PermApp, QryLib, TextLib, User;
 
 //------------------------------------------------------------------------------
 // Ñîçäàíèå òàáëèö ïðè ïåðâîì çàïóñêå ïðèëîæåíèÿ èëè ïðè ïðèíóäèòåëüíîé
 // èíèöèàëèçàöèè áàçû äàííûõ âî âðåìÿ òåñòèðîâàíèÿ.
 //------------------------------------------------------------------------------
-procedure TPermis.CreateTable;
+procedure TPerm.CreateTable;
 var
   Entity: TItem;
 begin
@@ -74,7 +74,7 @@ end;
 // Óäàëåíèå òàáëèö ïðè ïðèíóäèòåëüíîé èíèöèàëèçàöèè áàçû äàííûõ âî âðåìÿ
 // òåñòèðîâàíèÿ.
 //··············································································
-procedure TPermis.DropTable;
+procedure TPerm.DropTable;
 var
   Entity: TItem;
 begin
@@ -91,7 +91,7 @@ end;
 //··············································································
 // Èìÿ òàáëèöû áàçû äàííûõ, ñâÿçàííîé ñ ýòîé ñóùíîñòüþ.
 //··············································································
-function TPermis.DatasetName: ShortString;
+function TPerm.DatasetName: ShortString;
 begin
   Result := 'Perm';
 end;
@@ -99,7 +99,7 @@ end;
 //··············································································
 // Ïîëÿ òàáëèöû áàçû äàííûõ.
 //··············································································
-function TPermis.DatasetFields: String;
+function TPerm.DatasetFields: String;
 begin
   Result := inherited DatasetFields;
   // Ïðèçíàê ïðèìåíèìîñòè ðàçðåøåíèÿ êî âñåì ïðèëîæåíèÿì
@@ -109,14 +109,18 @@ end;
 //------------------------------------------------------------------------------
 // Ñîçäàíèå îáúåêòà ïðè ðàáîòå ïðèëîæåíèÿ.
 //------------------------------------------------------------------------------
-function TPermis.Run(FilterAppId: Integer);
+class function TPerm.Run(FilterAppId: Integer): TPerm;
 begin
-  PrepDataSets;
-  SetFilter(FilterAppId);
+  Result := TPerm.Create;
+
+  with Result do begin
+    PrepDataSets;
+    SetFilter(FilterAppId);
+  end;
 end;
 
 //··············································································
-procedure TPermis.PrepDataSets;
+procedure TPerm.PrepDataSets;
 begin
   QryPerms := TQuery.Create(nil);
   QryUtils.InitQuery(QryPerms);
@@ -135,9 +139,10 @@ begin
 end;
 
 //··············································································
-// Ãîòîâèì çàïðîñ íà ïðèëîæåíèÿ, ïðèãîäíûå äëÿ ðàçðåøåíèÿ.
+// Çàïðîñ äëÿ ïðèëîæåíèé, ê êîòîðûì ìîæíî ïðèìåíèòü òåêóùåå â QryPerm
+// ðàçðåøåíèå.
 //··············································································
-procedure TPermis.PrepAffAppsQry;
+procedure TPerm.PrepAffAppsQry;
 var
   App: TApp;
   List: TList;
@@ -148,9 +153,8 @@ begin
   with QryAffApps do begin
     SQL.Text :=
       'select * ' +
-      'from ' + DatasetName + ' p ' +
-        'join ' + List.DatasetName + ' a on a.OwnerId = p.Id ' +
-      'where a.EntityId = :FilterAppId or :FilterAppId = 0';
+      'from ' + List.DatasetName + ' a  ' +
+      'where a.OwnerId = :PermId';
     Prepare;
   end;
 
@@ -159,94 +163,114 @@ begin
 end;
 
 //··············································································
-procedure TPermis.PrepGrantUsrsQry;
+// Çàïðîñ äëÿ ïîëüçîâàòåëåé, êîòîðûì ïðåäîñòàâëåíî òåêóùåå â QryPerm ðàçðåøåíèå,
+// ñ ó÷¸òîì ôèëüòðà ïðèëîæåíèé.
+//··············································································
+procedure TPerm.PrepGrantUsrsQry;
+var
+  User, PermApp, List: TItem;
 begin
+  User := TUser.Create;
+  PermApp := TPermApp.Create;
+  List := TList.Create(User, PermApp);
+
+  with QryGrantUsrs do begin
+    SQL.Text :=
+      'select * ' +
+      'from ' + PermApp.DatasetName + ' pa ' +
+        'left join ' + List.DatasetName + ' upa on upa.EntityId = pa.Id ' +
+        'left join ' + User.DatasetName + ' u ' +
+          'on u.' + User.FieldName('Id') + ' = pa.OwnerId ' +
+      'where pa.PermId = :PermId ' +
+        'and pa.AppId = :AppId or :AppId = 0';
+    ;
+  end;
 end;
 
 //··············································································
-procedure TPermis.SetFilter(AppId: Integer);
+procedure TPerm.SetFilter(AppId: Integer);
 begin
   FilterAppId := AppId;
   OpenPerms;
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.OpenPerms;
+procedure TPerm.OpenPerms;
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.AddPerm(PermRec: TDataSet);
+procedure TPerm.AddPerm(PermRec: TDataSet);
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.UpdatePerm(PermRec: TDataSet);
+procedure TPerm.UpdatePerm(PermRec: TDataSet);
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.DeletePerm(PermId: Integer);
+procedure TPerm.DeletePerm(PermId: Integer);
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.ClosePerms;
+procedure TPerm.ClosePerms;
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.OpenAffApps;
+procedure TPerm.OpenAffApps;
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.AddAffectApp(AppId: Integer);
+procedure TPerm.AddAffectApp(AppId: Integer);
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.RevokeApp(AppId: Integer);
+procedure TPerm.RevokeApp(AppId: Integer);
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.CloseAffectApps;
+procedure TPerm.CloseAffectApps;
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.OpenGrantUsrs;
+procedure TPerm.OpenGrantUsrs;
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.GrantUser(UserId, AppId: Integer);
+procedure TPerm.GrantUser(UserId, AppId: Integer);
 begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TPermis.RevokePerm(UserId, AppId: Integer);
+procedure TPerm.RevokePerm(UserId, AppId: Integer);
 begin
 end;
 
 //------------------------------------------------------------------------------
 //
 //------------------------------------------------------------------------------
-procedure TPermis.ApplyChanges;
+procedure TPerm.ApplyChanges;
 begin
   // ...
   FreeDataSets;
 end;
 
 //··············································································
-procedure TPermis.CancelChanges;
+procedure TPerm.CancelChanges;
 begin
   FreeDataSets;
 end;
 
 //··············································································
-procedure TPermis.FreeDataSets;
+procedure TPerm.FreeDataSets;
 begin
   QryPerms.UpdateObject.Free;
   QryAffApps.UpdateObject.Free;

@@ -22,7 +22,7 @@ function TNamedItem.DataSetFields: String;
 begin
   Result := inherited DataSetFields;
   Result := TextUtils.ConcatStr(Result,
-    MapFieldName('Name') + ' VarChar(30)', ', ');
+    FieldName('Name') + ' VarChar(30)', ', ');
   Result := TextUtils.ConcatStr(Result,
     'Notes blob sub_type 1 segment size 4096', ',');
 end;

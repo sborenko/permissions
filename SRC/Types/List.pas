@@ -36,13 +36,13 @@ begin
   Execute(
     'alter table ' + DatasetName + ' ' +
       'add foreign key (OwnerId) references ' + Owner.DatasetName +
-        ' (' + Owner.MapFieldName('Id') + ') ' +
+        ' (' + Owner.FieldName('Id') + ') ' +
       'on delete cascade'
   );
   Execute(
     'alter table ' + DatasetName + ' ' +
       'add foreign key (EntityId) references ' + Entity.DatasetName +
-        ' (' + Entity.MapFieldName('Id') + ')' +
+        ' (' + Entity.FieldName('Id') + ')' +
       'on delete cascade'
   );
 end;
@@ -50,7 +50,7 @@ end;
 //------------------------------------------------------------------------------
 function TList.DatasetName: ShortString;
 begin
-  Result := Owner.DatasetName + Entity.DatasetName;
+  Result := Owner.DatasetName + '_' + Entity.DatasetName;
 end;
 
 //------------------------------------------------------------------------------
