@@ -37,13 +37,13 @@ begin
   Execute(
     'alter table ' + DatasetName + ' ' +
       'add foreign key (EntityId) references ' + Entity.DatasetName +
-        ' (' + Entity.MapFieldName('Id') + ')' +
+        ' (' + Entity.FieldName('Id') + ')' +
       'on delete cascade'
   );
   Execute(
     'alter table ' + DatasetName + ' ' +
       'add foreign key (ParentId) references ' + DatasetName +
-        ' (' + MapFieldName('Id') + ') ' +
+        ' (' + FieldName('Id') + ') ' +
       'on delete cascade'
   );
 end;

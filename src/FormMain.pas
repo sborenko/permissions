@@ -42,8 +42,6 @@ uses
 
 //------------------------------------------------------------------------------
 procedure TFrmMain.FormCreate(Sender: TObject);
-var
-  Msg: String;
 begin
   Caption := 'Permissions ' + GetAppVersion;
 end;

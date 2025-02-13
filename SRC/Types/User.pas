@@ -7,12 +7,11 @@ uses
 
 type
   TUser = class(TNamedItem)
-  protected
-    function MapFieldName(Name: ShortString): ShortString; override;
   public
     procedure CreateTable; override;
     procedure DropTable; override;
     function DatasetName: ShortString; override;
+    function FieldName(Name: ShortString): ShortString; override;
   end;
 
 implementation
@@ -69,11 +68,11 @@ function TUser.DatasetName: ShortString;
 begin
   // Result := 'Users';
   // Äëÿ ÎÏÈ
-  Result := 'Usrs';
+  Result := 'Usr';
 end;
 
 //------------------------------------------------------------------------------
-function TUser.MapFieldName(Name: ShortString): ShortString;
+function TUser.FieldName(Name: ShortString): ShortString;
 begin
   // Äëÿ ÎÏÈ
   if Name = 'Id' then

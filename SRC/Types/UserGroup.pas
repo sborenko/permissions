@@ -49,7 +49,7 @@ begin
   Entity.Free;
 
   // Список разрешений
-  Entity := TPermis.Create;
+  Entity := TPerm.Create;
   with TList.Create(Self, Entity) do begin
     CreateTable;
     Free;
@@ -81,7 +81,7 @@ begin
   end;
   Entity.Free;
 
-  Entity := TPermis.Create;
+  Entity := TPerm.Create;
   with TList.Create(Self, Entity) do begin
     DropTable;
     Free;
@@ -94,7 +94,7 @@ end;
 //------------------------------------------------------------------------------
 function TUsrGroup.DataSetName: ShortString;
 begin
-  Result := 'UsrGrps';
+  Result := 'UsrGrp';
 end;
 
 end.

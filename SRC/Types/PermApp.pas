@@ -27,8 +27,8 @@ end;
 function TPermApp.DatasetFields: String;
 begin
   Result := inherited DatasetFields;
-  Result := TextUtils.ConcatStr(Result, 'PermId Integer not null', ',');
-  Result := TextUtils.ConcatStr(Result, 'AppId Integer not null', ',');
+  Result := TextUtils.ConcatStr(Result, 'PermId Integer not null', ', ');
+  Result := TextUtils.ConcatStr(Result, 'AppId Integer not null', ', ');
 end;
 
 end.

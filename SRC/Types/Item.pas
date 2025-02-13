@@ -22,7 +22,7 @@ type
     procedure CreateTable; virtual;
     procedure DropTable; virtual;
 
-    function MapFieldName(Name: ShortString): ShortString; virtual;
+    function FieldName(Name: ShortString): ShortString; virtual;
   end;
 
 implementation
@@ -39,7 +39,7 @@ begin
   );
   Execute(
     'alter table ' + DatasetName + ' ' +
-      'add primary key (' + MapFieldName('Id') + ')'
+      'add primary key (' + FieldName('Id') + ')'
   );
   RunGenDDLStmt(
     'create sequence ' + DatasetName, false
@@ -63,7 +63,7 @@ end;
 //------------------------------------------------------------------------------
 function TItem.DataSetFields: String;
 begin
-  Result := MapFieldName('Id') + ' Integer not null';
+  Result := FieldName('Id') + ' Integer not null';
 end;
 
 //------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-function TItem.MapFieldName(Name: ShortString): ShortString;
+function TItem.FieldName(Name: ShortString): ShortString;
 begin
   Result := Name;
 end;

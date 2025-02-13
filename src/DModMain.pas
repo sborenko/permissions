@@ -10,7 +10,7 @@ type
     Database: TDatabase;
     procedure DataModuleCreate(Sender: TObject);
   private
-    procedure EmptyDatabase;
+    procedure InitDatabase;
   end;
 
 var
@@ -33,17 +33,17 @@ begin
   end;
 
   if LowerCase(ParamStr(1)) = 'init' then
-    EmptyDatabase;
+    InitDatabase;
 end;
 
 //------------------------------------------------------------------------------
-procedure TDmMain.EmptyDatabase;
+procedure TDmMain.InitDatabase;
 var
   UsrGroup: TUsrGroup;
   User: TUser;
   Role: TRole;
   PermApp: TPermApp;
-  Perm: TPermis;
+  Perm: TPerm;
   App: TApp;
 begin
   // Готовим объекты
@@ -51,7 +51,7 @@ begin
   User := TUser.Create;
   Role := TRole.Create;
   PermApp := TPermApp.Create;
-  Perm := TPermis.Create;
+  Perm := TPerm.Create;
   App := TApp.Create;
 
   // Удаляем, начиная со сложных объектов

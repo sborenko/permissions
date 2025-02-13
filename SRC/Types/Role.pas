@@ -30,7 +30,7 @@ begin
     Free;
   end;
 
-  Entity := TPermis.Create;
+  Entity := TPerm.Create;
   with TList.Create(Self, Entity) do begin
     CreateTable;
     Free;
@@ -48,7 +48,7 @@ begin
     Free;
   end;
 
-  Perm := TPermis.Create;
+  Perm := TPerm.Create;
   with TList.Create(Self, Perm) do begin
     DropTable;
     Free;
@@ -61,7 +61,7 @@ end;
 //------------------------------------------------------------------------------
 function TRole.DatasetName: ShortString;
 begin
-  Result := 'Roles';
+  Result := 'Role';
 end;
 
 end.
