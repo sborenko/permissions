@@ -46,9 +46,9 @@ Width=931
 Height=246
 MaxLeft=-8
 MaxTop=107
-MaxWidth=1874
+MaxWidth=1936
 MaxHeight=1101
-ClientWidth=1858
+ClientWidth=1920
 ClientHeight=1062
 LeftPanelSize=256
 LeftPanelClients=DockSite0
@@ -67,8 +67,8 @@ LeftCol=1
 
 [View1]
 Module=D:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
-CursorX=115
-CursorY=27
+CursorX=119
+CursorY=13
 TopLine=1
 LeftCol=1
 
@@ -107,7 +107,7 @@ Visible=1
 State=2
 Left=0
 Top=0
-Width=1366
+Width=1920
 Height=123
 MaxLeft=-1
 MaxTop=-1

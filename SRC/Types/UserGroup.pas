@@ -94,7 +94,7 @@ end;
 //------------------------------------------------------------------------------
 function TUsrGroup.DataSetName: ShortString;
 begin
-  Result := 'UserGroups';
+  Result := 'UsrGrps';
 end;
 
 end.

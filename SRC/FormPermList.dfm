@@ -18,16 +18,16 @@ object FrmPermList: TFrmPermList
   PixelsPerInch = 96
   TextHeight = 13
   object SplitterMain: TSplitter
-    Left = 458
+    Left = 466
     Top = 0
-    Height = 503
+    Height = 508
     Align = alRight
   end
   object PanelRight: TPanel
-    Left = 461
+    Left = 469
     Top = 0
     Width = 255
-    Height = 503
+    Height = 508
     Align = alRight
     TabOrder = 0
     object SplitterRight: TSplitter
@@ -71,13 +71,13 @@ object FrmPermList: TFrmPermList
       Left = 1
       Top = 278
       Width = 253
-      Height = 224
+      Height = 229
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       DesignSize = (
         253
-        224)
+        229)
       object LblFilter: TLabel
         Left = 8
         Top = 8
@@ -118,8 +118,8 @@ object FrmPermList: TFrmPermList
   end
   object PanelBottom: TPanel
     Left = 0
-    Top = 503
-    Width = 716
+    Top = 508
+    Width = 724
     Height = 41
     Align = alBottom
     TabOrder = 1
@@ -127,8 +127,8 @@ object FrmPermList: TFrmPermList
   object DBGrid1: TDBGrid
     Left = 0
     Top = 0
-    Width = 458
-    Height = 503
+    Width = 466
+    Height = 508
     Align = alClient
     TabOrder = 2
     TitleFont.Charset = DEFAULT_CHARSET

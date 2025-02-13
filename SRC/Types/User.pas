@@ -18,7 +18,7 @@ type
 implementation
 
 uses
-  Item, Role, Permission, List, SysUtils;
+  Item, Role, PermApp, List, SysUtils;
 
 //------------------------------------------------------------------------------
 procedure TUser.CreateTable;
@@ -34,7 +34,7 @@ begin
   end;
   Entity.Free;
 
-  Entity := TPermis.Create;
+  Entity := TPermApp.Create;
   with TList.Create(Self, Entity) do begin
     CreateTable;
     Free;
@@ -54,7 +54,7 @@ begin
   end;
   Entity.Free;
 
-  Entity := TPermis.Create;
+  Entity := TPermApp.Create;
   with TList.Create(Self, Entity) do begin
     DropTable;
     Free;

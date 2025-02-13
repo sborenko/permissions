@@ -26,7 +26,8 @@ uses
   DATABASENAME in 'SRC\DATABASENAME.pas',
   CmnSettings in '..\Common\AllApps\CmnSettings.pas',
   PwdTypes in '..\Common\Passwords\PwdTypes.pas',
-  VersionInfo in '..\Common\VersionInfo\VersionInfo.pas';
+  VersionInfo in '..\Common\VersionInfo\VersionInfo.pas',
+  PermApp in 'SRC\Types\PermApp.pas';
 
 {$R *.res}
 
