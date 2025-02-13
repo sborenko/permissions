@@ -27,7 +27,8 @@ uses
   CmnSettings in '..\Common\AllApps\CmnSettings.pas',
   PwdTypes in '..\Common\Passwords\PwdTypes.pas',
   VersionInfo in '..\Common\VersionInfo\VersionInfo.pas',
-  PermApp in 'SRC\Types\PermApp.pas';
+  PermApp in 'SRC\Types\PermApp.pas',
+  CdsLib in '..\Common\CdsLib.pas';
 
 {$R *.res}
 

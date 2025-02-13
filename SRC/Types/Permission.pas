@@ -3,22 +3,36 @@ unit Permission;
 interface
 
 uses
-  Db, DbTables, NamedItem;
+  Db, DbClient, DbTables, Item, NamedItem;
 
 type
 
   TPerm = class(TNamedItem)
   private
     QryPerms, QryAffApps, QryGrantUsrs: TQuery;
+    CdsPermBuff: TClientDataSet;
 
     FilterAppId: Integer;
+    App, PermApp, User: TItem;
 
     procedure PrepDataSets;
     procedure FreeDataSets;
 
+    procedure PrepDataObjs;
+    procedure FreeDataObjs;
+
+    procedure PrepPermsQry;
     procedure PrepAffAppsQry;
     procedure PrepGrantUsrsQry;
+
+    procedure OpenPerms;
+    procedure OpenAffApps;
+    procedure OpenGrantUsrs;
+
+    function GetPermBuff: TDataSet;
   public
+    destructor Destroy; override;
+    
     procedure CreateTable; override;
     procedure DropTable; override;
     function DatasetName: ShortString; override;
@@ -27,29 +41,24 @@ type
     class function Run(FilterAppId: Integer): TPerm;
 
     procedure SetFilter(AppId: Integer);
-    procedure OpenPerms;
-    procedure AddPerm(PermRec: TDataSet);
-    procedure UpdatePerm(PermRec: TDataSet);
+
+    function AddPerm: TDataSet;
+    function UpdatePerm: TDataSet;
     procedure DeletePerm(PermId: Integer);
-    procedure ClosePerms;
+    procedure ApplyUpdate;
+    procedure CancelUpdate;
 
-    procedure OpenAffApps;
     procedure AddAffectApp(AppId: Integer);
-    procedure RevokeApp(AppId: Integer);
-    procedure CloseAffectApps;
+    procedure RevokeAff(AppId: Integer);
 
-    procedure OpenGrantUsrs;
-    procedure GrantUser(UserId, AppId: Integer);
+    procedure GrantPerm(UserId, AppId: Integer);
     procedure RevokePerm(UserId, AppId: Integer);
-
-    procedure ApplyChanges;
-    procedure CancelChanges;
   end;
 
 implementation
 
 uses
-  App, Item, List, PermApp, QryLib, TextLib, User;
+  App, CdsLib, DsLib, List, PermApp, QryLib, TextLib, User, Variants;
 
 //------------------------------------------------------------------------------
 // Ñîçäàíèå òàáëèö ïðè ïåðâîì çàïóñêå ïðèëîæåíèÿ èëè ïðè ïðèíóäèòåëüíîé
@@ -114,12 +123,29 @@ begin
   Result := TPerm.Create;
 
   with Result do begin
+    PrepDataObjs;
     PrepDataSets;
+
     SetFilter(FilterAppId);
   end;
 end;
 
 //··············································································
+destructor TPerm.Destroy;
+begin
+  FreeDataSets;
+  FreeDataObjs;
+end;
+
+//··············································································
+procedure TPerm.PrepDataObjs;
+begin
+  App := TApp.Create;
+  PermApp := TPermApp.Create;
+  User := TUser.Create;
+end;
+
+//------------------------------------------------------------------------------
 procedure TPerm.PrepDataSets;
 begin
   QryPerms := TQuery.Create(nil);
@@ -134,8 +160,29 @@ begin
   QryUtils.InitQuery(QryGrantUsrs);
   QryGrantUsrs.UpdateObject := TUpdateSQL.Create(nil);
 
+  PrepPermsQry;
   PrepAffAppsQry;
   PrepGrantUsrsQry;
+end;
+
+//··············································································
+// Çàïðîñ íà ðàçðåøåíèÿ ñ ó÷¸òîì ôèëüòðà ïðèëîæåíèé.
+//··············································································
+procedure TPerm.PrepPermsQry;
+var
+  List: TItem;
+begin
+  List := TList.Create(Self, App);
+
+  with QryPerms do begin
+    SQL.Text :=
+      'select * ' +
+      'from ' + List.DatasetName + ' pa ' +
+        'left join ' + DatasetName + ' p ' +
+          'on p.Id = pa.OwnerId ' +
+      'where pa.EntityId = :FilterAppId or :FilterAppId = 0';
+    Prepare;
+  end;
 end;
 
 //··············································································
@@ -144,17 +191,17 @@ end;
 //··············································································
 procedure TPerm.PrepAffAppsQry;
 var
-  App: TApp;
-  List: TList;
+  List: TItem;
 begin
-  App := TApp.Create;
   List := TList.Create(Self, App);
 
   with QryAffApps do begin
     SQL.Text :=
       'select * ' +
-      'from ' + List.DatasetName + ' a  ' +
-      'where a.OwnerId = :PermId';
+      'from ' + List.DatasetName + ' pa  ' +
+        'left join ' + App.DataSetName + ' a ' +
+          'on a.' + App.FieldName('Id') + ' = pa.EntityId ' +
+      'where pa.OwnerId = :PermId';
     Prepare;
   end;
 
@@ -168,10 +215,8 @@ end;
 //··············································································
 procedure TPerm.PrepGrantUsrsQry;
 var
-  User, PermApp, List: TItem;
+  List: TItem;
 begin
-  User := TUser.Create;
-  PermApp := TPermApp.Create;
   List := TList.Create(User, PermApp);
 
   with QryGrantUsrs do begin
@@ -188,88 +233,171 @@ begin
 end;
 
 //··············································································
+//
+//··············································································
+procedure TPerm.OpenPerms;
+begin
+  with QryPerms do begin
+    DisableControls;
+    Close;
+
+    ParamByName('AppId').AsInteger := FilterAppId;
+    Open;
+
+    EnableControls;
+  end;
+end;
+
+//··············································································
+function TPerm.GetPermBuff: TDataSet;
+begin
+  if CdsPermBuff = nil then
+    CdsPermBuff := CdsUtils.CreateCds(QryPerms);
+
+  Result := CdsPermBuff;
+end;
+
+//··············································································
+procedure TPerm.OpenAffApps;
+begin
+  with QryAffApps do begin
+    DisableControls;
+    Close;
+
+    ParamByName('PermId').AsInteger := QryPerms.FieldByName('Id').AsInteger;
+    Open;
+
+    EnableControls;
+  end;
+end;
+
+//··············································································
+procedure TPerm.OpenGrantUsrs;
+begin
+  with QryGrantUsrs do begin
+    DisableControls;
+    Close;
+
+    ParamByName('PermId').AsInteger := QryPerms.FieldByName('Id').AsInteger;
+    ParamByName('AppId').AsInteger := FilterAppId;
+    Open;
+
+    EnableControls;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 procedure TPerm.SetFilter(AppId: Integer);
 begin
   FilterAppId := AppId;
+  
   OpenPerms;
+  OpenGrantUsrs;
 end;
 
-//------------------------------------------------------------------------------
-procedure TPerm.OpenPerms;
+//··············································································
+function TPerm.AddPerm: TDataSet;
 begin
+  Result := GetPermBuff;
+  Result.Append;
 end;
 
-//------------------------------------------------------------------------------
-procedure TPerm.AddPerm(PermRec: TDataSet);
+//··············································································
+function TPerm.UpdatePerm: TDataSet;
 begin
+  Result := GetPermBuff;
+  Result.Edit;
+  DsUtils.CopyRecord(QryPerms, Result);
 end;
 
-//------------------------------------------------------------------------------
-procedure TPerm.UpdatePerm(PermRec: TDataSet);
+//··············································································
+procedure TPerm.ApplyUpdate;
 begin
+  with GetPermBuff do begin
+    Post;
+
+    with QryPerms do begin
+      Edit;
+      DsUtils.CopyRecord(CdsPermBuff, QryPerms);
+      Post;
+      
+      CommitUpdates;
+      ApplyUpdates;
+    end;
+
+    Delete;
+  end;
 end;
 
-//------------------------------------------------------------------------------
+//··············································································
+procedure TPerm.CancelUpdate;
+begin
+  with GetPermBuff do begin
+    Cancel;
+
+    if RecordCount > 0 then
+      Delete;
+  end;
+end;
+
+//··············································································
 procedure TPerm.DeletePerm(PermId: Integer);
 begin
+  QryPerms.Delete;
 end;
 
-//------------------------------------------------------------------------------
-procedure TPerm.ClosePerms;
-begin
-end;
-
-//------------------------------------------------------------------------------
-procedure TPerm.OpenAffApps;
-begin
-end;
-
-//------------------------------------------------------------------------------
+//··············································································
 procedure TPerm.AddAffectApp(AppId: Integer);
 begin
+  with QryAffApps do begin
+    Append;
+    FieldByName('Id').AsInteger := QryUtils.GenerateId(DatasetName);
+    FieldByName('OwnerId').AsInteger := QryPerms.FieldByName('Id').AsInteger;
+    FieldByName('EntityId').AsInteger := AppId;
+    Post;
+
+    CommitUpdates;
+    ApplyUpdates;
+  end;
 end;
 
-//------------------------------------------------------------------------------
-procedure TPerm.RevokeApp(AppId: Integer);
+//··············································································
+procedure TPerm.RevokeAff(AppId: Integer);
 begin
+  with QryAffApps do begin
+    Locate('OwnerId;EntityId', VarArrayOf([
+      QryPerms.FieldByName('Id').AsInteger,
+      QryPerms.FieldByName('Id').AsInteger]), []
+    );
+    Delete;
+
+    CommitUpdates;
+    ApplyUpdates;
+  end;
 end;
 
-//------------------------------------------------------------------------------
-procedure TPerm.CloseAffectApps;
+//··············································································
+procedure TPerm.GrantPerm(UserId, AppId: Integer);
 begin
+  with QryGrantUsrs do begin
+    Append;
+    FieldByName('Id').AsInteger := QryUtils.GenerateId(DatasetName);
+    FieldByName('OwnerId').AsInteger := QryPerms.FieldByName('Id').AsInteger;
+    FieldByName('EntityId').AsInteger := AppId;
+    Post;
+
+    CommitUpdates;
+    ApplyUpdates;
+  end;
 end;
 
-//------------------------------------------------------------------------------
-procedure TPerm.OpenGrantUsrs;
-begin
-end;
-
-//------------------------------------------------------------------------------
-procedure TPerm.GrantUser(UserId, AppId: Integer);
-begin
-end;
-
-//------------------------------------------------------------------------------
+//··············································································
 procedure TPerm.RevokePerm(UserId, AppId: Integer);
 begin
 end;
 
 //------------------------------------------------------------------------------
-//
-//------------------------------------------------------------------------------
-procedure TPerm.ApplyChanges;
-begin
-  // ...
-  FreeDataSets;
-end;
-
-//··············································································
-procedure TPerm.CancelChanges;
-begin
-  FreeDataSets;
-end;
-
-//··············································································
 procedure TPerm.FreeDataSets;
 begin
   QryPerms.UpdateObject.Free;
@@ -279,6 +407,17 @@ begin
   QryPerms.Free;
   QryAffApps.Free;
   QryGrantUsrs.Free;
+
+  if CdsPermBuff <> nil then
+    CdsPermBuff.Free;
+end;
+
+//··············································································
+procedure TPerm.FreeDataObjs;
+begin
+  App.Free;
+  PermApp.Free;
+  User.Free;
 end;
 
 end.
