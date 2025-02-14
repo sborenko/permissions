@@ -7,12 +7,11 @@ uses
 
 type
   TUser = class(TNamedItem)
-  protected
-    function FieldName(Name: ShortString): ShortString; override;
   public
     procedure CreateTable; override;
     procedure DropTable; override;
     function DatasetName: ShortString; override;
+    function FieldName(Name: ShortString): ShortString; override;
   end;
 
 implementation
