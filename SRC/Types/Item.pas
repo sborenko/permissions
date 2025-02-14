@@ -2,12 +2,9 @@ unit Item;
 
 interface
 
-uses
-  Classes;
-
 type
 
-  TItem = class(TInterfacedObject)
+  TItem = class
   private
     procedure RunTblDDLStmt(Stmt: ShortString; IfExists: Boolean);
     procedure RunGenDDLStmt(Stmt: ShortString; IfExists: Boolean);

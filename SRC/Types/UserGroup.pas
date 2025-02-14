@@ -17,7 +17,7 @@ type
 implementation
 
 uses
-  Hier, Item, List, Permission, Role, User;
+  Hier, Item, List, PermApp, Role, User;
 
 //------------------------------------------------------------------------------
 procedure TUsrGroup.CreateTable;
@@ -49,7 +49,7 @@ begin
   Entity.Free;
 
   // Список разрешений
-  Entity := TPerm.Create;
+  Entity := TPermApp.Create;
   with TList.Create(Self, Entity) do begin
     CreateTable;
     Free;
@@ -62,11 +62,13 @@ procedure TUsrGroup.DropTable;
 var
   Entity: TItem;
 begin
+  // Иерархия групп пользователей
   with THier.Create(Self) do begin
     DropTable;
     Free;
   end;
 
+  // Список пользователей
   Entity := TUser.Create;
   with TList.Create(Self, Entity) do begin
     DropTable;
@@ -74,6 +76,7 @@ begin
   end;
   Entity.Free;
 
+  // Список ролей
   Entity := TRole.Create;
   with TList.Create(Self, Entity) do begin
     DropTable;
@@ -81,7 +84,8 @@ begin
   end;
   Entity.Free;
 
-  Entity := TPerm.Create;
+  // Список разрешений к приложениям
+  Entity := TPermApp.Create;
   with TList.Create(Self, Entity) do begin
     DropTable;
     Free;

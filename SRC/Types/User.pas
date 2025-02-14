@@ -26,6 +26,7 @@ var
 begin
   inherited CreateTable;
 
+  // Список ролей
   Entity := TRole.Create;
   with TList.Create(Self, Entity) do begin
     CreateTable;
@@ -33,6 +34,7 @@ begin
   end;
   Entity.Free;
 
+  // Список разрешений к приложениям
   Entity := TPermApp.Create;
   with TList.Create(Self, Entity) do begin
     CreateTable;

@@ -63,12 +63,14 @@ begin
   App.DropTable;
 
   // Создаём, начиная с простых
+  {
   App.CreateTable;
   Perm.CreateTable;
   PermApp.CreateTable;
   Role.CreateTable;
   User.CreateTable;
   UsrGroup.CreateTable;
+  }
 
   // Освобождаем память
   UsrGroup.Free;

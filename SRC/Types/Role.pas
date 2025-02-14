@@ -16,7 +16,7 @@ type
 implementation
 
 uses
-  Hier, Item, List, Permission;
+  Hier, Item, List, PermApp;
 
 //------------------------------------------------------------------------------
 procedure TRole.CreateTable;
@@ -25,12 +25,14 @@ var
 begin
   inherited CreateTable;
 
+  // Иерархия ролей
   with THier.Create(Self) do begin
     CreateTable;
     Free;
   end;
 
-  Entity := TPerm.Create;
+  // Список разрешений к приложениям
+  Entity := TPermApp.Create;
   with TList.Create(Self, Entity) do begin
     CreateTable;
     Free;
@@ -41,19 +43,19 @@ end;
 //------------------------------------------------------------------------------
 procedure TRole.DropTable;
 var
-  Perm: TItem;
+  Entity: TItem;
 begin
   with THier.Create(Self) do begin
     DropTable;
     Free;
   end;
 
-  Perm := TPerm.Create;
-  with TList.Create(Self, Perm) do begin
+  Entity := TPermApp.Create;
+  with TList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;
-  Perm.Free;
+  Entity.Free;
 
   inherited DropTable;
 end;
