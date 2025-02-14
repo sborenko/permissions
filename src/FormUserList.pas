@@ -4,22 +4,36 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  FormList, Dialogs, StdCtrls, Buttons, ActnList, Grids, DBGrids;
+  FormList, Dialogs, StdCtrls, Buttons, ActnList, Grids, DBGrids, CheckLst,
+  ExtCtrls;
 
 type
-  TFrmUsrList = class(TFormList)
-    BtnSelect: TBitBtn;
-    BtnNewUser: TBitBtn;
-    BitBtn4: TBitBtn;
-    DbgrUsers: TDBGrid;
+  TFrmUsrList = class(TFrmList)
     ActionList: TActionList;
     ActNewUser: TAction;
     ActDelete: TAction;
     ActSelect: TAction;
+    PanelClient: TPanel;
+    PanelPemrs: TPanel;
+    PanelRoles: TPanel;
+    Splitter1: TSplitter;
+    PanelUsrs: TPanel;
+    DbgrUsrs: TDBGrid;
+    LblPerms: TLabel;
+    LblRoles: TLabel;
+    LblUsers: TLabel;
+    DbgrPerms: TDBGrid;
+    DbgrRoles: TDBGrid;
+    PanelBottom: TPanel;
+    PanelUsrGrps: TPanel;
+    SplitUsrGrpsPems: TSplitter;
+    SplitPermRoles: TSplitter;
+    ChLstBxUsrGrps: TCheckListBox;
+    LblUsrGrps: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ActNonSelectUpdate(Sender: TObject);
     procedure ActSelectUpdate(Sender: TObject);
-    procedure DbgrUsersKeyDown(Sender: TObject; var Key: Word;
+    procedure DbgrUsrsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   end;
 
@@ -51,7 +65,7 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TFrmUsrList.DbgrUsersKeyDown(Sender: TObject; var Key: Word;
+procedure TFrmUsrList.DbgrUsrsKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_RETURN then

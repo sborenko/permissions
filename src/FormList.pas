@@ -7,7 +7,7 @@ uses
 
 type
 
-  TFormList = class(TForm)
+  TFrmList = class(TForm)
   public
     function SelectionMode: Boolean;
     function SelectionResult: Integer;
@@ -19,13 +19,13 @@ uses
   Controls;
 
 //------------------------------------------------------------------------------
-function TFormList.SelectionMode: Boolean;
+function TFrmList.SelectionMode: Boolean;
 begin
   Result := FormStyle <> fsMDIChild;
 end;
 
 //------------------------------------------------------------------------------
-function TFormList.SelectionResult: Integer;
+function TFrmList.SelectionResult: Integer;
 begin
   if ModalResult = mrOk then
     Result := 100

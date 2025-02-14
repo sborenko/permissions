@@ -5,10 +5,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Grids, DBGrids, StdCtrls, DBCtrls, CheckLst, ExtCtrls, DB,
-  ComCtrls, Menus;
+  ComCtrls, Menus, FormList;
 
 type
-  TFrmPermList = class(TForm)
+  TFrmPermList = class(TFrmList)
     PanelRight: TPanel;
     PanelBottom: TPanel;
     PanelAffApps: TPanel;

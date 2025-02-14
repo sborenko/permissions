@@ -1,9 +1,9 @@
 object FrmPermList: TFrmPermList
-  Left = 43
-  Top = 159
-  Width = 802
-  Height = 375
-  Caption = 'Permissions'
+  Left = 419
+  Top = 282
+  Width = 1107
+  Height = 709
+  Caption = 'Permission List'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,22 +18,22 @@ object FrmPermList: TFrmPermList
   PixelsPerInch = 96
   TextHeight = 13
   object SplitterMain: TSplitter
-    Left = 389
+    Left = 1096
     Top = 0
-    Height = 295
+    Height = 634
     Align = alRight
   end
   object PanelRight: TPanel
-    Left = 392
+    Left = 553
     Top = 0
-    Width = 394
-    Height = 295
-    Align = alRight
+    Width = 543
+    Height = 634
+    Align = alClient
     TabOrder = 0
     object SplitterRight: TSplitter
       Left = 1
       Top = 153
-      Width = 392
+      Width = 541
       Height = 5
       Cursor = crVSplit
       Align = alTop
@@ -42,13 +42,13 @@ object FrmPermList: TFrmPermList
     object PanelAffApps: TPanel
       Left = 1
       Top = 1
-      Width = 392
+      Width = 541
       Height = 152
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
       DesignSize = (
-        392
+        541
         152)
       object LblAffectedApps: TLabel
         Left = 8
@@ -60,7 +60,7 @@ object FrmPermList: TFrmPermList
       object ChLstBoxAffApps: TCheckListBox
         Left = 0
         Top = 24
-        Width = 392
+        Width = 541
         Height = 125
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
@@ -70,16 +70,16 @@ object FrmPermList: TFrmPermList
     object PanelGrantUsrs: TPanel
       Left = 1
       Top = 158
-      Width = 392
-      Height = 136
+      Width = 541
+      Height = 475
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       object PageCtrlGrants: TPageControl
         Left = 0
         Top = 0
-        Width = 392
-        Height = 136
+        Width = 541
+        Height = 475
         ActivePage = TabGrantUsrs
         Align = alClient
         Style = tsFlatButtons
@@ -93,8 +93,8 @@ object FrmPermList: TFrmPermList
           object DbgrGrantUsrs: TDBGrid
             Left = 0
             Top = 0
-            Width = 384
-            Height = 105
+            Width = 533
+            Height = 444
             Align = alClient
             Color = clMoneyGreen
             TabOrder = 0
@@ -115,8 +115,8 @@ object FrmPermList: TFrmPermList
   end
   object PanelBottom: TPanel
     Left = 0
-    Top = 295
-    Width = 786
+    Top = 634
+    Width = 1099
     Height = 41
     Align = alBottom
     TabOrder = 1
@@ -124,14 +124,14 @@ object FrmPermList: TFrmPermList
   object PanelPerms: TPanel
     Left = 0
     Top = 0
-    Width = 389
-    Height = 295
-    Align = alClient
+    Width = 553
+    Height = 634
+    Align = alLeft
     TabOrder = 2
     OnResize = PanelPermsResize
     DesignSize = (
-      389
-      295)
+      553
+      634)
     object LblFilter: TLabel
       Left = 8
       Top = 8
@@ -142,8 +142,8 @@ object FrmPermList: TFrmPermList
     object DbgrPerms: TDBGrid
       Left = 2
       Top = 32
-      Width = 386
-      Height = 260
+      Width = 542
+      Height = 594
       Anchors = [akLeft, akTop, akRight, akBottom]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
@@ -155,7 +155,7 @@ object FrmPermList: TFrmPermList
     object DbCmbBoxAppFilter: TDBComboBox
       Left = 42
       Top = 8
-      Width = 346
+      Width = 502
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       ItemHeight = 13

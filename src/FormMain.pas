@@ -27,6 +27,7 @@ type
     procedure ActViewUsers(Sender: TObject);
     procedure ActViewUsrGroups(Sender: TObject);
     procedure ActViewPermiss(Sender: TObject);
+    procedure ActRolesExecute(Sender: TObject);
   end;
 
 var
@@ -35,7 +36,7 @@ var
 implementation
 
 uses
-  App, DModMain, FormUsrGrpList, FormUserList, Permission, Role,
+  App, DModMain, FormRoleList, FormUsrGrpList, FormUserList, Permission, Role,
   User, UserGroup, Hier, VersionInfo, FormPermList;
 
 {$R *.dfm}
@@ -68,6 +69,11 @@ end;
 procedure TFrmMain.ActViewPermiss(Sender: TObject);
 begin
   TFrmPermList.Create(Self).Show;
+end;
+
+procedure TFrmMain.ActRolesExecute(Sender: TObject);
+begin
+  TFrmRoleList.Create(Self).Show;
 end;
 
 end.

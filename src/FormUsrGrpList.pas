@@ -4,11 +4,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  FormList, Dialogs, ActnList, Menus, ComCtrls, StdCtrls, Buttons;
+  FormList, Dialogs, ActnList, Menus, ComCtrls, StdCtrls, Buttons,
+  CheckLst, ExtCtrls;
 
 type
-  TFrmUsrGrpList = class(TFormList)
-    TreeUsrGroups: TTreeView;
+  TFrmUsrGrpList = class(TFrmList)
     ActionList: TActionList;
     ActNewGroup: TAction;
     ActAddGroup: TAction;
@@ -21,13 +21,30 @@ type
     PopAddUser: TMenuItem;
     Sep2: TMenuItem;
     PopDeleteItem: TMenuItem;
+    BitBtn4: TBitBtn;
+    ActSelect: TAction;
+    PopSelect: TMenuItem;
+    PanelBottom: TPanel;
+    BtnSelect: TBitBtn;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
-    BtnSelect: TBitBtn;
-    ActSelect: TAction;
-    PopSelect: TMenuItem;
+    PanelClient: TPanel;
+    PanelUsrGrps: TPanel;
+    TreeUsrGrps: TTreeView;
+    LblUsrGrps: TLabel;
+    SplitUsrGrps: TSplitter;
+    PanelUsrs: TPanel;
+    PanelPerms: TPanel;
+    PanelRoles: TPanel;
+    Splitter1: TSplitter;
+    Splitter2: TSplitter;
+    CheckListBox1: TCheckListBox;
+    CheckListBox2: TCheckListBox;
+    CheckListBox3: TCheckListBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ActAddGroupExecute(Sender: TObject);
     procedure ActNewGroupExecute(Sender: TObject);
@@ -35,7 +52,7 @@ type
     procedure ActDeleteItemExecute(Sender: TObject);
     procedure ActSelectUpdate(Sender: TObject);
     procedure ActNonSelectUpdate(Sender: TObject);
-    procedure TreeUsrGroupsKeyDown(Sender: TObject; var Key: Word;
+    procedure TreeUsrGrpsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
 //    procedure LoadTree;
@@ -114,7 +131,7 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TFrmUsrGrpList.TreeUsrGroupsKeyDown(Sender: TObject;
+procedure TFrmUsrGrpList.TreeUsrGrpsKeyDown(Sender: TObject;
   var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_RETURN then
