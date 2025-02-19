@@ -29,24 +29,35 @@ type
     procedure OpenGrantUsrs;
 
     function GetPermBuff: TDataSet;
+
+    procedure PermAfterScroll(DataSet: TDataSet);
   public
+    // Óïðàâëåíèå ñòðóêòóðîé áîçû äàííûõ
     procedure CreateTable; override;
     procedure DropTable; override;
     function DatasetName: ShortString; override;
     function DatasetFields: String; override;
 
-    class function Run(FilterAppId: Integer = 0): TPerm;
-    procedure Release;
+    // Ñîçäàíèå/óäàëåíèå ðàçðåøåíèÿ
+    class function Open(FilterAppId: Integer = 0): TPerm;
+    class procedure Release(Perm: TPerm);
 
+    // Äîñòóï ê äàííûì
+    function GetPerms: TDataSet;
+    function GetAffApps: TDataSet;
+    function GetGrantUsrs: TDataSet;
+
+    // Êîìàíäû óïðàâëåíèÿ îáúåêòîì
     procedure SetFilter(AppId: Integer);
 
+    // Êîìàíäû ìàíèïóëèðîâàíèÿ äàííûìè
     function AddPerm: TDataSet;
     function UpdatePerm: TDataSet;
     procedure DeletePerm(PermId: Integer);
     procedure ApplyUpdate;
     procedure CancelUpdate;
 
-    procedure AddAffectApp(AppId: Integer);
+    procedure AddAffApp(AppId: Integer);
     procedure RevokeAff(AppId: Integer);
 
     procedure GrantPerm(UserId, AppId: Integer);
@@ -116,7 +127,7 @@ end;
 //------------------------------------------------------------------------------
 // Ñîçäàíèå îáúåêòà ïðè ðàáîòå ïðèëîæåíèÿ.
 //------------------------------------------------------------------------------
-class function TPerm.Run(FilterAppId: Integer = 0): TPerm;
+class function TPerm.Open(FilterAppId: Integer = 0): TPerm;
 begin
   Result := TPerm.Create;
 
@@ -129,10 +140,13 @@ begin
 end;
 
 //··············································································
-procedure TPerm.Release;
+class procedure TPerm.Release(Perm: TPerm);
 begin
-  FreeDataSets;
-  FreeDataObjs;
+  with Perm do begin
+    FreeDataSets;
+    FreeDataObjs;
+    Free;
+  end;
 end;
 
 //··············································································
@@ -148,6 +162,7 @@ procedure TPerm.PrepDataSets;
 begin
   QryPerms := TQuery.Create(nil);
   QryUtils.InitQuery(QryPerms);
+  QryPerms.AfterScroll := PermAfterScroll;
   QryPerms.UpdateObject := TUpdateSQL.Create(nil);
 
   QryAffApps := TQuery.Create(nil);
@@ -181,6 +196,8 @@ begin
       'where pa.EntityId = :FilterAppId or :FilterAppId = 0';
     Prepare;
   end;
+
+  List.Free;
 end;
 
 //··············································································
@@ -203,7 +220,6 @@ begin
     Prepare;
   end;
 
-  App.Free;
   List.Free;
 end;
 
@@ -224,10 +240,14 @@ begin
         'left join ' + List.DatasetName + ' upa on upa.EntityId = pa.Id ' +
         'left join ' + User.DatasetName + ' u ' +
           'on u.' + User.FieldName('Id') + ' = upa.OwnerId ' +
+        'left join ' + App.DatasetName + ' ' +
+          'on pa.AppId = ' + App.FieldName('Id') + ' ' +
       'where pa.PermId = :PermId ' +
         'and pa.AppId = :FilterAppId or :FilterAppId = 0';
-    ;
+    Prepare;
   end;
+
+  List.Free;
 end;
 
 //··············································································
@@ -244,15 +264,6 @@ begin
 
     EnableControls;
   end;
-end;
-
-//··············································································
-function TPerm.GetPermBuff: TDataSet;
-begin
-  if CdsPermBuff = nil then
-    CdsPermBuff := CdsUtils.CreateCds(QryPerms);
-
-  Result := CdsPermBuff;
 end;
 
 //··············································································
@@ -285,20 +296,59 @@ begin
 end;
 
 //------------------------------------------------------------------------------
+// Äîñòóï ê äàííûì
+//------------------------------------------------------------------------------
+function TPerm.GetPerms: TDataSet;
+begin
+  Result := QryPerms;
+end;
+
+//··············································································
+function TPerm.GetAffApps: TDataSet;
+begin
+  Result := QryAffApps;
+end;
+
+//··············································································
+function TPerm.GetGrantUsrs: TDataSet;
+begin
+  Result := QryGrantUsrs;
+end;
+
+//··············································································
+function TPerm.GetPermBuff: TDataSet;
+begin
+  if CdsPermBuff = nil then
+    CdsPermBuff := CdsUtils.CreateCds(QryPerms);
+
+  Result := CdsPermBuff;
+end;
+
+//··············································································
+procedure TPerm.PermAfterScroll(DataSet: TDataSet);
+begin
+  OpenAffApps;
+end;
+
+//------------------------------------------------------------------------------
+// Êîìàíäû óïðàâëåíèÿ îáúåêòîì
 //------------------------------------------------------------------------------
 procedure TPerm.SetFilter(AppId: Integer);
 begin
   FilterAppId := AppId;
-  
+
   OpenPerms;
   OpenGrantUsrs;
 end;
 
-//··············································································
+//------------------------------------------------------------------------------
+// Êîìàíäû ìàíèïóëèðîâàíèÿ äàííûìè
+//------------------------------------------------------------------------------
 function TPerm.AddPerm: TDataSet;
 begin
   Result := GetPermBuff;
   Result.Append;
+  Result.FieldByName('AllApps').AsString := ' ';
 end;
 
 //··············································································
@@ -311,13 +361,25 @@ end;
 
 //··············································································
 procedure TPerm.ApplyUpdate;
+var
+  NewRec: Boolean;
 begin
   with GetPermBuff do begin
     Post;
 
+    NewRec := FieldByName('Id').AsInteger = 0;
+
     with QryPerms do begin
-      Edit;
+      if NewRec then
+        Append
+      else
+        Edit;
+
       DsUtils.CopyRecord(CdsPermBuff, QryPerms);
+
+      if NewRec then
+        FieldByName('Id').AsInteger := QryUtils.GenerateId(DatasetName);
+
       Post;
       
       CommitUpdates;
@@ -346,7 +408,7 @@ begin
 end;
 
 //··············································································
-procedure TPerm.AddAffectApp(AppId: Integer);
+procedure TPerm.AddAffApp(AppId: Integer);
 begin
   with QryAffApps do begin
     Append;

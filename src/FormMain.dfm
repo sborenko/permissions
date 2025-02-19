@@ -22,26 +22,26 @@ object FrmMain: TFrmMain
     Top = 56
     object MnuRefs: TMenuItem
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      object MnuPermissions: TMenuItem
+        Action = ActPermissions
+      end
+      object MnuRoles: TMenuItem
+        Action = ActRoles
+      end
+      object Sep2: TMenuItem
+        Caption = '-'
+      end
       object MnuApplications: TMenuItem
         Action = ActApplications
       end
       object Sep1: TMenuItem
         Caption = '-'
       end
-      object MnuUserGroups: TMenuItem
-        Action = ActUserGroups
-      end
       object MnuUsers: TMenuItem
         Action = ActUsers
       end
-      object Sep2: TMenuItem
-        Caption = '-'
-      end
-      object MnuRoles: TMenuItem
-        Action = ActRoles
-      end
-      object MnuPermissions: TMenuItem
-        Action = ActPermissions
+      object MnuUserGroups: TMenuItem
+        Action = ActUserGroups
       end
     end
   end

@@ -1,6 +1,6 @@
 object FrmPermList: TFrmPermList
-  Left = 419
-  Top = 282
+  Left = 566
+  Top = 214
   Width = 1107
   Height = 709
   Caption = 'Permission List'
@@ -15,16 +15,16 @@ object FrmPermList: TFrmPermList
   Position = poDefault
   Visible = True
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object SplitterMain: TSplitter
-    Left = 1096
+    Left = 553
     Top = 0
     Height = 634
-    Align = alRight
   end
   object PanelRight: TPanel
-    Left = 553
+    Left = 556
     Top = 0
     Width = 543
     Height = 634
@@ -47,6 +47,7 @@ object FrmPermList: TFrmPermList
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
+      OnResize = PanelAffAppsResize
       DesignSize = (
         541
         152)
@@ -57,13 +58,14 @@ object FrmPermList: TFrmPermList
         Height = 13
         Caption = 'Affected Applications'
       end
-      object ChLstBoxAffApps: TCheckListBox
+      object ChLstBxAffApps: TCheckListBox
         Left = 0
         Top = 24
         Width = 541
         Height = 125
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
+        PopupMenu = PopupAffApps
         TabOrder = 0
       end
     end
@@ -75,40 +77,39 @@ object FrmPermList: TFrmPermList
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
-      object PageCtrlGrants: TPageControl
+      object PageCtrlGrantPerms: TPageControl
         Left = 0
         Top = 0
         Width = 541
         Height = 475
         ActivePage = TabGrantUsrs
         Align = alClient
+        PopupMenu = PopupGrantPerm
         Style = tsFlatButtons
         TabOrder = 0
         object TabGrantRoles: TTabSheet
           Caption = 'Granted Roles'
         end
         object TabGrantUsrs: TTabSheet
-          Caption = 'Grant Users'
+          Caption = 'Granted Users'
           ImageIndex = 1
-          object DbgrGrantUsrs: TDBGrid
+          OnResize = TabGrantUsrsResize
+          DesignSize = (
+            533
+            444)
+          object ChLstBxUsrPermApps: TCheckListBox
             Left = 0
             Top = 0
-            Width = 533
-            Height = 444
-            Align = alClient
-            Color = clMoneyGreen
+            Width = 534
+            Height = 441
+            Anchors = [akLeft, akTop, akRight, akBottom]
+            ItemHeight = 13
             TabOrder = 0
-            TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
-            TitleFont.Height = -11
-            TitleFont.Name = 'MS Sans Serif'
-            TitleFont.Style = []
           end
         end
         object TabGrantUsrGrps: TTabSheet
           Caption = 'Granted User Groups'
           ImageIndex = 2
-          OnResize = TabGrantUsrGrpsResize
         end
       end
     end
@@ -145,6 +146,8 @@ object FrmPermList: TFrmPermList
       Width = 542
       Height = 594
       Anchors = [akLeft, akTop, akRight, akBottom]
+      DataSource = DsrcPerms
+      PopupMenu = PopupPerms
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
@@ -162,12 +165,43 @@ object FrmPermList: TFrmPermList
       TabOrder = 1
     end
   end
-  object DataSource1: TDataSource
+  object DsrcPerms: TDataSource
     Left = 24
     Top = 80
   end
-  object PopupMenu1: TPopupMenu
+  object PopupPerms: TPopupMenu
     Left = 88
     Top = 80
+    object NAddPermission: TMenuItem
+      Caption = 'Add Permission'
+      OnClick = NAddPermissionClick
+    end
+    object NEditPermission: TMenuItem
+      Caption = 'Edit Permission'
+      OnClick = NEditPermissionClick
+    end
+    object NDelPerm: TMenuItem
+      Caption = 'Delete Permission'
+    end
+  end
+  object PopupAffApps: TPopupMenu
+    Left = 786
+    Top = 65
+    object NSetApp: TMenuItem
+      Caption = 'Set Application'
+    end
+    object NResetApp: TMenuItem
+      Caption = 'Reset Application'
+    end
+  end
+  object PopupGrantPerm: TPopupMenu
+    Left = 718
+    Top = 289
+    object NGrantPerm: TMenuItem
+      Caption = 'Grant Permission'
+    end
+    object NRevokePerm: TMenuItem
+      Caption = 'Revoke Permission'
+    end
   end
 end
