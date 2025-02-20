@@ -16,12 +16,12 @@ type
 implementation
 
 uses
-  Hier, Item, List, PermApp;
+  App, Hier, Item, List, Permission;
 
 //------------------------------------------------------------------------------
 procedure TRole.CreateTable;
 var
-  Entity: TItem;
+  Perm, App, Entity: TItem;
 begin
   inherited CreateTable;
 
@@ -32,7 +32,10 @@ begin
   end;
 
   // Список разрешений к приложениям
-  Entity := TPermApp.Create;
+//  Entity := TPermApp.Create;
+  Perm := TPerm.Create;
+  App := TApp.Create;
+  Entity := TList.Create(Perm, App);
   with TList.Create(Self, Entity) do begin
     CreateTable;
     Free;
@@ -43,14 +46,17 @@ end;
 //------------------------------------------------------------------------------
 procedure TRole.DropTable;
 var
-  Entity: TItem;
+  Perm, App, Entity: TItem;
 begin
   with THier.Create(Self) do begin
     DropTable;
     Free;
   end;
 
-  Entity := TPermApp.Create;
+//  Entity := TPermApp.Create;
+  Perm := TPerm.Create;
+  App := TApp.Create;
+  Entity := TList.Create(Perm, App);
   with TList.Create(Self, Entity) do begin
     DropTable;
     Free;
@@ -63,7 +69,7 @@ end;
 //------------------------------------------------------------------------------
 function TRole.DatasetName: ShortString;
 begin
-  Result := DATASET_PREFIX + 'Role';
+  Result := 'Role';
 end;
 
 end.

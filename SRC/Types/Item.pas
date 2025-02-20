@@ -5,10 +5,6 @@ interface
 uses
   DbTables;
 
-const
-  DATASET_PREFIX = 'P$';
-//  DATASET_PREFIX = '';
-
 type
   TItem = class
   private
@@ -23,6 +19,7 @@ type
     procedure PopulateUpdSQL(Item: TItem; UpdSQL: TUpdateSQL);
   public
     function DatasetName: ShortString; virtual; abstract;
+    function DecorDsName: ShortString; virtual;
 
     procedure CreateTable; virtual;
     procedure DropTable; virtual;
@@ -39,18 +36,18 @@ uses
 procedure TItem.CreateTable;
 begin
   RunTblDDLStmt(
-    'create table ' + DatasetName + '(' + FieldDefs + ')',
+    'create table ' + DecorDsName + '(' + FieldDefs + ')',
     false
   );
   Execute(
-    'alter table ' + DatasetName + ' ' +
+    'alter table ' + DecorDsName + ' ' +
       'add primary key (' + FieldName('Id') + ')'
   );
   RunGenDDLStmt(
-    'create sequence ' + DatasetName, false
+    'create sequence ' + DecorDsName, false
   );
   Execute(
-    'alter sequence ' + DatasetName + ' restart with 0'
+    'alter sequence ' + DecorDsName + ' restart with 0'
   );
 end;
 
@@ -58,11 +55,17 @@ end;
 procedure TItem.DropTable;
 begin
   RunTblDDLStmt(
-    'drop table ' + DatasetName, true
+    'drop table ' + DecorDsName, true
   );
   RunGenDDLStmt(
-    'drop generator ' + DatasetName, true
+    'drop generator ' + DecorDsName, true
   );
+end;
+
+//------------------------------------------------------------------------------
+function TItem.DecorDsName: ShortString;
+begin
+  Result := 'P$' + DatasetName;
 end;
 
 //------------------------------------------------------------------------------
@@ -92,7 +95,7 @@ begin
       'if (' + NotClause + 'exists(' +
         'select 1 ' +
         'from rdb$relations ' +
-        'where rdb$relation_name = "' + UpperCase(DatasetName) + '"' +
+        'where rdb$relation_name = "' + UpperCase(DecorDsName) + '"' +
       ')) ' +
       'then execute statement "' + Stmt + '"; ' +
     'end'
@@ -115,7 +118,7 @@ begin
         'select 1 ' +
         'from rdb$generators ' +
         'where coalesce(RDB$SYSTEM_FLAG, 0) = 0 ' +
-          'and rdb$generator_name = "' + UpperCase(DatasetName) + '"' +
+          'and rdb$generator_name = "' + UpperCase(DecorDsName) + '"' +
       ')) ' +
       'then execute statement "' + Stmt + '"; ' +
     'end'
@@ -187,18 +190,18 @@ begin
 
   with UpdSQL do begin
     InsertSQL.Text :=
-      'insert into ' + Item.DatasetName + ' ' +
+      'insert into ' + Item.DecorDsName + ' ' +
       '(' + InsFldsClause + ') ' +
       'values ' +
       '(' + InsParamsClause + ')';
 
     ModifySQL.Text :=
-      'update ' + Item.DatasetName + ' ' +
+      'update ' + Item.DecorDsName + ' ' +
       'set ' + UpdValsClause + ' ' +
       'where ' + IdClause + ' = ' + OldIdClause;
 
     DeleteSQL.Text :=
-      'delete from ' + Item.DatasetName + ' ' +
+      'delete from ' + Item.DecorDsName + ' ' +
       'where ' + IdClause + ' = ' + OldIdClause;
   end;
 end;

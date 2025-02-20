@@ -53,12 +53,12 @@ type
     procedure NAddPermissionClick(Sender: TObject);
     procedure NEditPermissionClick(Sender: TObject);
     procedure ChLstBxAffAppsClickCheck(Sender: TObject);
+    procedure DsrcPermsDataChange(Sender: TObject; Field: TField);
   private
     Perm: TPerm;
 
     procedure LoadApps;
     procedure CheckPermApps;
-    function IndexOf(AppId: Integer): Integer;
   public
   end;
 
@@ -68,7 +68,7 @@ var
 implementation
 
 uses
-  App, DModMain, FormEditPerm, PermApp, QryLib;
+  App, DModMain, FormEditPerm, QryLib;
 
 {$R *.dfm}
 
@@ -115,7 +115,7 @@ begin
   with QryApps do begin
     SQL.Text :=
       'select * ' +
-      'from ' + App.DatasetName;
+      'from ' + App.DecorDsName;
     Open;
 
     while not Eof do begin
@@ -133,9 +133,14 @@ end;
 //------------------------------------------------------------------------------
 procedure TFrmPermList.CheckPermApps;
 var
-  Indx: Integer;
+  AppId, I: Integer;
 begin
-  with Perm.GetAffApps do begin
+{
+  for I := 0 to ChLstBxAffApps.Count - 1 do
+    AppId := (ChLstBxAffApps.Items.Objects[I] as TIdObject).Id;
+
+    if Perm.GetAffApps.Locate([])
+  with  do begin
     First;
 
     while not Eof do begin
@@ -145,20 +150,7 @@ begin
       Next;
     end;
   end;
-end;
-
-//------------------------------------------------------------------------------
-function TFrmPermList.IndexOf(AppId: Integer): Integer;
-var
-  I: Integer;
-begin
-  Result := -1;
-
-  for I := 0 to ChLstBxAffApps.Count - 1 do
-    if (ChLstBxAffApps.Items.Objects[I] as TIdObject).Id = AppId then begin
-      Result := I;
-      break;
-    end;
+}
 end;
 
 //------------------------------------------------------------------------------
@@ -217,6 +209,11 @@ begin
     Perm.ApplyUpdate
   else
     Perm.CancelUpdate;
+end;
+
+procedure TFrmPermList.DsrcPermsDataChange(Sender: TObject; Field: TField);
+begin
+  CheckPermApps;
 end;
 
 end.

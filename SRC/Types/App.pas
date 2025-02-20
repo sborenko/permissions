@@ -10,6 +10,7 @@ type
   TApp = class(TNamedItem)
   public
     function DatasetName: ShortString; override;
+    function DecorDsName: ShortString; override;
     function FieldName(Name: ShortString): ShortString; override;
   end;
 
@@ -19,6 +20,12 @@ implementation
 function TApp.DatasetName: ShortString;
 begin
   Result := 'zz_PCmp';
+end;
+
+//------------------------------------------------------------------------------
+function TApp.DecorDsName: ShortString;
+begin
+  Result := DatasetName;
 end;
 
 //------------------------------------------------------------------------------

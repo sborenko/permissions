@@ -19,7 +19,7 @@ var
 implementation
 
 uses
-  App, DATABASENAME, Hier, PermApp, Permission, Role, User, UserGroup;
+  App, DATABASENAME, Hier, Permission, Role, User, UserGroup;
 
 {$R *.dfm}
 
@@ -42,7 +42,6 @@ var
   UsrGroup: TUsrGroup;
   User: TUser;
   Role: TRole;
-  PermApp: TPermApp;
   Perm: TPerm;
   App: TApp;
 begin
@@ -50,31 +49,28 @@ begin
   UsrGroup := TUsrGroup.Create;
   User := TUser.Create;
   Role := TRole.Create;
-  PermApp := TPermApp.Create;
   Perm := TPerm.Create;
   App := TApp.Create;
 
   // Удаляем, начиная со сложных объектов
-{
+  {
   UsrGroup.DropTable;
   User.DropTable;
   Role.DropTable;
-  PermApp.DropTable;
   Perm.DropTable;
   // Не удаляем, она же - OPI'шная
   // App.DropTable;
-}
+  }
 
   // Создаём, начиная с простых
-{
+  {
   // Не создаём. Используем OPI'шную
   // App.CreateTable;
   Perm.CreateTable;
-  PermApp.CreateTable;
   Role.CreateTable;
   User.CreateTable;
   UsrGroup.CreateTable;
-}
+  }
 
   // Удаляем фабрики
   UsrGroup.Free;
@@ -82,7 +78,6 @@ begin
   Role.Free;
   Perm.Free;
   App.Free;
-  PermApp.Free;
 end;
 
 end.

@@ -167,6 +167,7 @@ object FrmPermList: TFrmPermList
     end
   end
   object DsrcPerms: TDataSource
+    OnDataChange = DsrcPermsDataChange
     Left = 24
     Top = 80
   end

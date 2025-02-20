@@ -1,27 +1,23 @@
 [Closed Files]
-File_0=SourceModule,'E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\PermApp.pas',0,1,1,1,1,0,0
-File_1=SourceModule,'e:\program files (x86)\borland\delphi7\source\vcl\CheckLst.pas',0,1,10,34,20,0,0
-File_2=SourceModule,'e:\program files (x86)\borland\delphi7\source\vcl\StdCtrls.pas',0,1,960,1,960,0,0
-File_3=SourceModule,'E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\List.pas',0,1,52,32,59,0,0
-File_4=SourceModule,'E:\OPI\PROJECTS\PERMISSIONS\Src\Types\NamedItem.pas',0,1,16,32,23,0,0
-File_5=SourceModule,'E:\OPI\PROJECTS\Common\TextLib.pas',0,1,92,1,97,0,0
+File_0=SourceModule,'E:\OPI\PROJECTS\PERMISSIONS\SRC\DATABASENAME.pas',0,1,1,3,6,0,0
+File_1=SourceModule,'E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\PermApp.pas',0,1,1,1,1,0,0
+File_2=SourceModule,'e:\program files (x86)\borland\delphi7\source\vcl\CheckLst.pas',0,1,10,34,20,0,0
+File_3=SourceModule,'e:\program files (x86)\borland\delphi7\source\vcl\StdCtrls.pas',0,1,960,1,960,0,0
 
 [Modules]
-Module0=E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
-Module1=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
-Module2=E:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas
-Module3=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\App.pas
-Module4=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Item.pas
-Module5=E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\Hier.pas
-Module6=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\User.pas
-Module7=E:\OPI\PROJECTS\PERMISSIONS\SRC\DATABASENAME.pas
-Count=8
+Module0=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
+Module1=E:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas
+Module2=E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
+Module3=E:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr
+Module4=E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\Hier.pas
+Module5=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\App.pas
+Module6=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Item.pas
+Module7=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Role.pas
+Module8=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\UserGroup.pas
+Module9=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\User.pas
+Module10=E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\List.pas
+Count=11
 EditWindowCount=1
-
-[E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas]
-ModuleType=SourceModule
-FormState=1
-FormOnTop=0
 
 [E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas]
 ModuleType=SourceModule
@@ -31,6 +27,21 @@ FormOnTop=0
 [E:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas]
 ModuleType=SourceModule
 FormState=1
+FormOnTop=0
+
+[E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas]
+ModuleType=SourceModule
+FormState=1
+FormOnTop=0
+
+[E:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\Hier.pas]
+ModuleType=SourceModule
+FormState=0
 FormOnTop=0
 
 [E:\OPI\PROJECTS\PERMISSIONS\Src\Types\App.pas]
@@ -43,7 +54,12 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\Hier.pas]
+[E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Role.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[E:\OPI\PROJECTS\PERMISSIONS\Src\Types\UserGroup.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -53,7 +69,7 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[E:\OPI\PROJECTS\PERMISSIONS\SRC\DATABASENAME.pas]
+[E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\List.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -62,13 +78,9 @@ FormOnTop=0
 FormState=0
 FormOnTop=0
 
-[E:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr]
-FormState=0
-FormOnTop=0
-
 [EditWindow0]
-ViewCount=8
-CurrentView=5
+ViewCount=11
+CurrentView=3
 View0=0
 View1=1
 View2=2
@@ -77,6 +89,9 @@ View4=4
 View5=5
 View6=6
 View7=7
+View8=8
+View9=9
+View10=10
 CodeExplorer=CodeExplorer@EditWindow0
 MessageView=MessageView@EditWindow0
 Create=1
@@ -92,72 +107,93 @@ MaxWidth=1382
 MaxHeight=669
 ClientWidth=1366
 ClientHeight=630
-LeftPanelSize=256
+LeftPanelSize=694
 LeftPanelClients=DockSite0
 LeftPanelData=0000040000000000A401000000000000001B010000000000000100000000A401000009000000446F636B5369746530FFFFFFFF
 RightPanelSize=0
-BottomPanelSize=159
+BottomPanelSize=271
 BottomPanelClients=MessageView@EditWindow0
 BottomPanelData=000004000000000000000000000000000000000000000000000100000000000000000B0000004D65737361676556696577FFFFFFFF
 
 [View0]
-Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Item.pas
-CursorX=30
-CursorY=111
-TopLine=101
+Module=E:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas
+CursorX=3
+CursorY=73
+TopLine=54
 LeftCol=1
 
 [View1]
-Module=E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\Hier.pas
-CursorX=13
-CursorY=54
-TopLine=37
+Module=E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
+CursorX=36
+CursorY=147
+TopLine=134
 LeftCol=1
 
 [View2]
-Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\App.pas
-CursorX=19
-CursorY=12
-TopLine=1
+Module=E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\List.pas
+CursorX=5
+CursorY=76
+TopLine=56
 LeftCol=1
 
 [View3]
 Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
-CursorX=54
-CursorY=339
-TopLine=333
+CursorX=1
+CursorY=224
+TopLine=217
 LeftCol=1
 
 [View4]
-Module=E:\OPI\PROJECTS\PERMISSIONS\Src\DModMain.pas
-CursorX=3
-CursorY=77
-TopLine=49
+Module=E:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr
+CursorX=1
+CursorY=39
+TopLine=30
 LeftCol=1
 
 [View5]
-Module=E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
-CursorX=35
-CursorY=172
-TopLine=161
+Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\User.pas
+CursorX=13
+CursorY=92
+TopLine=88
 LeftCol=1
 
 [View6]
-Module=E:\OPI\PROJECTS\PERMISSIONS\SRC\DATABASENAME.pas
-CursorX=3
-CursorY=6
-TopLine=1
+Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\UserGroup.pas
+CursorX=20
+CursorY=105
+TopLine=101
 LeftCol=1
 
 [View7]
-Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\User.pas
-CursorX=28
+Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Role.pas
+CursorX=16
+CursorY=70
+TopLine=66
+LeftCol=1
+
+[View8]
+Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Item.pas
+CursorX=1
+CursorY=139
+TopLine=129
+LeftCol=1
+
+[View9]
+Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\App.pas
+CursorX=13
+CursorY=28
+TopLine=27
+LeftCol=1
+
+[View10]
+Module=E:\OPI\PROJECTS\PERMISSIONS\SRC\Types\Hier.pas
+CursorX=5
 CursorY=67
-TopLine=53
+TopLine=59
 LeftCol=1
 
 [Watches]
-Count=7
+Count=8
 Watch0='SelectedId',256,0,18,1,0,'Watches'
 Watch1='Stmt',256,0,18,1,0,'Watches'
 Watch2='QryPerms',256,0,18,1,0,'Watches'
@@ -165,6 +201,7 @@ Watch3='Self',256,0,18,1,0,'Watches'
 Watch4='UpdSQL.InsertSQL.Text',256,0,18,1,0,'Watches'
 Watch5='UpdSQL.ModifySQL.Text',256,0,18,1,0,'Watches'
 Watch6='UpdSQL.DeleteSQL.Text',256,0,18,1,0,'Watches'
+Watch7='QryAffApps.SQL.Text',256,0,18,1,0,'Watches'
 
 [WatchWindow]
 WatchColumnWidth=100
@@ -174,12 +211,12 @@ Visible=1
 State=0
 Left=0
 Top=0
-Width=248
-Height=427
+Width=686
+Height=315
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=248
-ClientHeight=427
+ClientWidth=686
+ClientHeight=315
 TBDockHeight=149
 LRDockWidth=421
 Dockable=1
@@ -284,7 +321,7 @@ LRDockWidth=284
 Dockable=0
 SplitPos=128
 ArrangeBy=Name
-SelectedItem=OnClickCheck
+SelectedItem=Name
 ExpandedItems=Anchors,Constraints,DataSet.UpdateObject,Font.Style,Title
 HiddenCategories=
 
@@ -294,12 +331,12 @@ Visible=1
 State=0
 Left=0
 Top=0
-Width=248
-Height=427
+Width=686
+Height=315
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=248
-ClientHeight=427
+ClientWidth=686
+ClientHeight=315
 TBDockHeight=688
 LRDockWidth=511
 Dockable=1
@@ -316,12 +353,12 @@ Visible=1
 State=0
 Left=0
 Top=0
-Width=248
-Height=427
+Width=686
+Height=315
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=248
-ClientHeight=427
+ClientWidth=686
+ClientHeight=315
 TBDockHeight=688
 LRDockWidth=283
 Dockable=1
@@ -455,12 +492,12 @@ Visible=1
 State=0
 Left=0
 Top=0
-Width=248
-Height=427
+Width=686
+Height=315
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=248
-ClientHeight=427
+ClientWidth=686
+ClientHeight=315
 TBDockHeight=305
 LRDockWidth=192
 Dockable=1
@@ -472,12 +509,12 @@ State=0
 Left=12
 Top=0
 Width=1354
-Height=159
+Height=271
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1354
-ClientHeight=159
-TBDockHeight=159
+ClientHeight=271
+TBDockHeight=271
 LRDockWidth=443
 Dockable=1
 
@@ -491,16 +528,16 @@ Visible=1
 State=0
 Left=0
 Top=12
-Width=256
-Height=456
+Width=694
+Height=344
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=256
-ClientHeight=456
+ClientWidth=694
+ClientHeight=344
 TBDockHeight=94
-LRDockWidth=256
+LRDockWidth=694
 Dockable=1
 TabPosition=0
-ActiveTab=Call Stack
+ActiveTab=Watch List
 TabDockClients=CodeExplorer@EditWindow0,BreakpointWindow,CallStackWindow,WatchWindow
 

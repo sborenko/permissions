@@ -35,16 +35,17 @@ begin
   inherited CreateTable;
 
   Execute(
-    'alter table ' + DatasetName + ' ' +
-      'add foreign key (EntityId) references ' + Entity.DatasetName +
-        ' (' + Entity.FieldName('Id') + ')' +
-      'on delete cascade'
+    'alter table ' + DecorDsName + ' ' +
+    'add foreign key (' + 'ParentId) ' +
+    'references ' + DecorDsName + ' (' + FieldName('Id') + ') ' +
+    'on delete cascade'
   );
+  
   Execute(
-    'alter table ' + DatasetName + ' ' +
-      'add foreign key (ParentId) references ' + DatasetName +
-        ' (' + FieldName('Id') + ') ' +
-      'on delete cascade'
+    'alter table ' + DecorDsName + ' ' +
+    'add foreign key (' + Entity.DatasetName + 'Id) ' +
+    'references ' + Entity.DecorDsName + ' (' + Entity.FieldName('Id') + ')' +
+    'on delete cascade'
   );
 end;
 
@@ -62,7 +63,8 @@ begin
   Result := TextUtils.ConcatStr(Result, 'ParentId Integer not null' , ', ');
   // Идентификатор сущности, например, роль или группа пользователей,
   // которых могут создавать иерархии
-  Result := TextUtils.ConcatStr(Result, 'EntityId Integer not null' , ', ');
+  Result := TextUtils.ConcatStr(Result,
+    Entity.DatasetName + 'Id Integer not null' , ', ');
 end;
 
 end.

@@ -17,12 +17,12 @@ type
 implementation
 
 uses
-  Hier, Item, List, PermApp, Role, User;
+  App, Hier, Item, List, Permission, Role, User;
 
 //------------------------------------------------------------------------------
 procedure TUsrGroup.CreateTable;
 var
-  Entity: TItem;
+  Perm, App, Entity: TItem;
 begin
   inherited CreateTable;
 
@@ -49,7 +49,10 @@ begin
   Entity.Free;
 
   // Список разрешений
-  Entity := TPermApp.Create;
+//  Entity := TPermApp.Create;
+  Perm := TPerm.Create;
+  App := TApp.Create;
+  Entity := TList.Create(Perm, App);
   with TList.Create(Self, Entity) do begin
     CreateTable;
     Free;
@@ -60,7 +63,7 @@ end;
 //------------------------------------------------------------------------------
 procedure TUsrGroup.DropTable;
 var
-  Entity: TItem;
+  Perm, App, Entity: TItem;
 begin
   // Иерархия групп пользователей
   with THier.Create(Self) do begin
@@ -85,7 +88,10 @@ begin
   Entity.Free;
 
   // Список разрешений к приложениям
-  Entity := TPermApp.Create;
+//  Entity := TPermApp.Create;
+  Perm := TPerm.Create;
+  App := TApp.Create;
+  Entity := TList.Create(Perm, App);
   with TList.Create(Self, Entity) do begin
     DropTable;
     Free;
@@ -98,7 +104,7 @@ end;
 //------------------------------------------------------------------------------
 function TUsrGroup.DataSetName: ShortString;
 begin
-  Result := DATASET_PREFIX + 'UsrGrp';
+  Result := 'UsrGrp';
 end;
 
 end.

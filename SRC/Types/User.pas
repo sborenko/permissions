@@ -10,19 +10,22 @@ type
   public
     procedure CreateTable; override;
     procedure DropTable; override;
+
     function DatasetName: ShortString; override;
+    function DecorDsName: ShortString; override;
+    
     function FieldName(Name: ShortString): ShortString; override;
   end;
 
 implementation
 
 uses
-  Item, Role, PermApp, List, SysUtils;
+  App, Item, Permission, Role, List, SysUtils;
 
 //------------------------------------------------------------------------------
 procedure TUser.CreateTable;
 var
-  Entity: TItem;
+  Perm, App, Entity: TItem;
 begin
   // Не создаём, пользуемся OPI'шной
   // inherited CreateTable;
@@ -36,18 +39,22 @@ begin
   Entity.Free;
 
   // Список разрешений к приложениям
-  Entity := TPermApp.Create;
+  Perm := TPerm.Create;
+  App := TApp.Create;
+  Entity := TList.Create(Perm, App);
   with TList.Create(Self, Entity) do begin
     CreateTable;
     Free;
   end;
+  Perm.Free;
+  App.Free;
   Entity.Free;
 end;
 
 //------------------------------------------------------------------------------
 procedure TUser.DropTable;
 var
-  Entity: TItem;
+  Perm, App, Entity: TItem;
 begin
   Entity := TRole.Create;
   with TList.Create(Self, Entity) do begin
@@ -56,11 +63,15 @@ begin
   end;
   Entity.Free;
 
-  Entity := TPermApp.Create;
+  Perm := TPerm.Create;
+  App := TApp.Create;
+  Entity := TList.Create(Perm, App);
   with TList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;
+  Perm.Free;
+  App.Free;
   Entity.Free;
 
   // Не удаляем, она же - OPI'шная
@@ -73,6 +84,12 @@ begin
   // Result := 'Usr';
   // Для ОПИ
   Result := 'Usrs';
+end;
+
+//------------------------------------------------------------------------------
+function TUser.DecorDsName: ShortString;
+begin
+  Result := DatasetName;
 end;
 
 //------------------------------------------------------------------------------

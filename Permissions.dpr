@@ -27,7 +27,6 @@ uses
   CmnSettings in '..\Common\AllApps\CmnSettings.pas',
   PwdTypes in '..\Common\Passwords\PwdTypes.pas',
   VersionInfo in '..\Common\VersionInfo\VersionInfo.pas',
-  PermApp in 'SRC\Types\PermApp.pas',
   CdsLib in '..\Common\CdsLib.pas',
   FormRoleList in 'SRC\FormRoleList.pas' {FrmRoleList},
   FormEditPerm in 'SRC\FormEditPerm.pas' {FrmEditPerm};
