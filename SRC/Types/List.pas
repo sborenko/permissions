@@ -13,7 +13,7 @@ type
     constructor Create(Owner, Entity: TItem);
     procedure CreateTable; override;
     function DatasetName: ShortString; override;
-    function DatasetFields: String; override;
+    function FieldDefs: String; override;
   end;
 
 implementation
@@ -54,9 +54,9 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-function TList.DatasetFields: String;
+function TList.FieldDefs: String;
 begin
-  Result := inherited DatasetFields;
+  Result := inherited FieldDefs;
   // Идентификатор владельца, например, пользователь.
   Result := TextUtils.ConcatStr(Result, 'OwnerId Integer not null', ', ');
   // Идентификатор сущностей, которые образуют список, например разрешения

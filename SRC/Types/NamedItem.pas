@@ -9,7 +9,7 @@ type
 
   TNamedItem = class(TItem)
   protected
-    function DataSetFields: String; override;
+    function FieldDefs: String; override;
   end;
 
 implementation
@@ -18,9 +18,9 @@ uses
   TextLib;
 
 //------------------------------------------------------------------------------
-function TNamedItem.DataSetFields: String;
+function TNamedItem.FieldDefs: String;
 begin
-  Result := inherited DataSetFields;
+  Result := inherited FieldDefs;
   Result := TextUtils.ConcatStr(Result,
     FieldName('Name') + ' VarChar(30)', ', ');
   Result := TextUtils.ConcatStr(Result,

@@ -2,17 +2,25 @@ unit Item;
 
 interface
 
-type
+uses
+  DbTables;
 
+const
+  DATASET_PREFIX = 'P$';
+//  DATASET_PREFIX = '';
+
+type
   TItem = class
   private
     procedure RunTblDDLStmt(Stmt: ShortString; IfExists: Boolean);
     procedure RunGenDDLStmt(Stmt: ShortString; IfExists: Boolean);
 
   protected
-    function DatasetFields: String; virtual;
+    function FieldDefs: String; virtual;
+    function FieldNames: String; virtual;
     procedure Execute(Stmt: String);
 
+    procedure PopulateUpdSQL(Item: TItem; UpdSQL: TUpdateSQL);
   public
     function DatasetName: ShortString; virtual; abstract;
 
@@ -25,13 +33,13 @@ type
 implementation
 
 uses
-  DbTables, QryLib, SysUtils, TextLib;
+  Classes, QryLib, SysUtils, TextLib;
 
 //------------------------------------------------------------------------------
 procedure TItem.CreateTable;
 begin
   RunTblDDLStmt(
-    'create table ' + DatasetName + '(' + DatasetFields + ')',
+    'create table ' + DatasetName + '(' + FieldDefs + ')',
     false
   );
   Execute(
@@ -58,9 +66,15 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-function TItem.DataSetFields: String;
+function TItem.FieldDefs: String;
 begin
   Result := FieldName('Id') + ' Integer not null';
+end;
+
+//------------------------------------------------------------------------------
+function TItem.FieldNames: String;
+begin
+  Result := 'Id';
 end;
 
 //------------------------------------------------------------------------------
@@ -127,6 +141,66 @@ end;
 function TItem.FieldName(Name: ShortString): ShortString;
 begin
   Result := Name;
+end;
+
+//------------------------------------------------------------------------------
+procedure TItem.PopulateUpdSQL(Item: TItem; UpdSQL: TUpdateSQL);
+var
+  FldList: TStringList;
+  I: Integer;
+  FldName: ShortString;
+
+  InsFldsClause,
+  InsParamsClause,
+  UpdValsClause,
+  IdClause,
+  OldIdClause: String;
+
+  function ParamName: ShortString;
+  begin
+    Result := ':' + FldName;
+  end;
+begin
+  InsFldsClause := '';
+  InsParamsClause := '';
+
+  FldList := TextUtils.SplitStr(Item.FieldDefs, ',');
+
+  UpdValsClause := '';
+
+  for I := 0 to FldList.Count - 1 do begin
+    FldName := Copy(FldList[I], 1, Pos(' ', FldList[I]) - 1);
+
+    InsFldsClause := TextUtils.ConcatStr(InsFldsClause, FldName, ', ');
+    InsParamsClause := TextUtils.ConcatStr(InsParamsClause, ParamName, ', ');
+
+    if I = 0 then begin
+      IdClause := FldName;
+      OldIdClause := ':OLD_' + FldName;
+    end;
+
+    if I > 0 then
+      UpdValsClause := TextUtils.ConcatStr(
+        UpdValsClause, FldName + ' = ' + ParamName, ', '
+      );
+  end;
+
+  with UpdSQL do begin
+    InsertSQL.Text :=
+      'insert into ' + Item.DatasetName + ' ' +
+      '(' + InsFldsClause + ') ' +
+      'values ' +
+      '(' + InsParamsClause + ')';
+
+    ModifySQL.Text :=
+      'update ' + Item.DatasetName + ' ' +
+      'set ' + UpdValsClause + ' ' +
+      'where ' + IdClause + ' = ' + OldIdClause;
+
+    DeleteSQL.Text :=
+      'delete from ' + Item.DatasetName + ' ' +
+      'where ' + IdClause + ' = ' + OldIdClause;
+  end;
 end;
 
 end.

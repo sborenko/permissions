@@ -63,7 +63,7 @@ end;
 //------------------------------------------------------------------------------
 function TRole.DatasetName: ShortString;
 begin
-  Result := 'Role';
+  Result := DATASET_PREFIX + 'Role';
 end;
 
 end.

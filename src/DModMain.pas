@@ -19,8 +19,7 @@ var
 implementation
 
 uses
-  App, PermApp, Permission, Role, User, UserGroup,
-  Hier;
+  App, DATABASENAME, Hier, PermApp, Permission, Role, User, UserGroup;
 
 {$R *.dfm}
 
@@ -28,7 +27,8 @@ uses
 procedure TDmMain.DataModuleCreate(Sender: TObject);
 begin
   with Database do begin
-    AliasName := 'PERMISSIONS';
+    AliasName := DATABASE_ALIAS;
+    DatabaseName := DATABASE_NAME;
     Connected := true;
   end;
 
@@ -46,7 +46,7 @@ var
   Perm: TPerm;
   App: TApp;
 begin
-  // Готовим объекты
+  // Готовим фабрики
   UsrGroup := TUsrGroup.Create;
   User := TUser.Create;
   Role := TRole.Create;
@@ -55,22 +55,28 @@ begin
   App := TApp.Create;
 
   // Удаляем, начиная со сложных объектов
+{
   UsrGroup.DropTable;
   User.DropTable;
   Role.DropTable;
   PermApp.DropTable;
   Perm.DropTable;
-  App.DropTable;
+  // Не удаляем, она же - OPI'шная
+  // App.DropTable;
+}
 
   // Создаём, начиная с простых
-  App.CreateTable;
+{
+  // Не создаём. Используем OPI'шную
+  // App.CreateTable;
   Perm.CreateTable;
   PermApp.CreateTable;
   Role.CreateTable;
   User.CreateTable;
   UsrGroup.CreateTable;
+}
 
-  // Освобождаем память
+  // Удаляем фабрики
   UsrGroup.Free;
   User.Free;
   Role.Free;

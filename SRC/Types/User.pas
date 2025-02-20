@@ -24,7 +24,8 @@ procedure TUser.CreateTable;
 var
   Entity: TItem;
 begin
-  inherited CreateTable;
+  // Не создаём, пользуемся OPI'шной
+  // inherited CreateTable;
 
   // Список ролей
   Entity := TRole.Create;
@@ -62,15 +63,16 @@ begin
   end;
   Entity.Free;
 
-  inherited DropTable;
+  // Не удаляем, она же - OPI'шная
+  // inherited DropTable;
 end;
 
 //------------------------------------------------------------------------------
 function TUser.DatasetName: ShortString;
 begin
-  // Result := 'Users';
+  // Result := 'Usr';
   // Для ОПИ
-  Result := 'Usr';
+  Result := 'Usrs';
 end;
 
 //------------------------------------------------------------------------------

@@ -9,7 +9,7 @@ type
   TPermApp = class(TItem)
   public
     function DatasetName: ShortString; override;
-    function DatasetFields: String; override;
+    function FieldDefs: String; override;
   end;
 
 implementation
@@ -20,13 +20,13 @@ uses
 //------------------------------------------------------------------------------
 function TPermApp.DatasetName;
 begin
-  Result := 'PermApp';
+  Result := DATASET_PREFIX + 'PermApp';
 end;
 
 //------------------------------------------------------------------------------
-function TPermApp.DatasetFields: String;
+function TPermApp.FieldDefs: String;
 begin
-  Result := inherited DatasetFields;
+  Result := inherited FieldDefs;
   Result := TextUtils.ConcatStr(Result, 'PermId Integer not null', ', ');
   Result := TextUtils.ConcatStr(Result, 'AppId Integer not null', ', ');
 end;

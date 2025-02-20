@@ -5,9 +5,16 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, Grids, DBGrids, StdCtrls, DBCtrls, CheckLst, ExtCtrls, DB,
-  ComCtrls, Menus, FormList, Permission;
+  ComCtrls, Menus, FormList, Permission, DBTables;
 
 type
+  TIdObject = class
+    Id: Integer;
+  public
+    constructor Create(Id: Integer); reintroduce;
+    destructor Destroy; override;
+  end;
+
   TFrmPermList = class(TFrmList)
     PanelRight: TPanel;
     PanelBottom: TPanel;
@@ -37,6 +44,7 @@ type
     PopupGrantPerm: TPopupMenu;
     NGrantPerm: TMenuItem;
     NRevokePerm: TMenuItem;
+    QryApps: TQuery;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure PanelPermsResize(Sender: TObject);
     procedure PanelAffAppsResize(Sender: TObject);
@@ -44,10 +52,14 @@ type
     procedure TabGrantUsrsResize(Sender: TObject);
     procedure NAddPermissionClick(Sender: TObject);
     procedure NEditPermissionClick(Sender: TObject);
+    procedure ChLstBxAffAppsClickCheck(Sender: TObject);
   private
     Perm: TPerm;
+
+    procedure LoadApps;
+    procedure CheckPermApps;
+    function IndexOf(AppId: Integer): Integer;
   public
-    { Public declarations }
   end;
 
 var
@@ -56,15 +68,30 @@ var
 implementation
 
 uses
-  FormEditPerm;
+  App, DModMain, FormEditPerm, PermApp, QryLib;
 
 {$R *.dfm}
+
+//------------------------------------------------------------------------------
+constructor TIdObject.Create(Id: Integer);
+begin
+  Self.Id := Id;
+end;
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+destructor TIdObject.Destroy;
+begin
+  inherited Destroy;
+end;
 
 //------------------------------------------------------------------------------
 procedure TFrmPermList.FormCreate(Sender: TObject);
 begin
   Perm := TPerm.Open;
   DsrcPerms.DataSet := Perm.GetPerms;
+
+  LoadApps;
+  CheckPermApps;
 end;
 
 //------------------------------------------------------------------------------
@@ -74,6 +101,81 @@ begin
   Action := caFree;
 
   TPerm.Release(Perm);
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.LoadApps;
+var
+  App: TApp;
+begin
+  App := TApp.Create;
+
+  QryUtils.InitQuery(QryApps);
+
+  with QryApps do begin
+    SQL.Text :=
+      'select * ' +
+      'from ' + App.DatasetName;
+    Open;
+
+    while not Eof do begin
+      ChLstBxAffApps.AddItem(
+        FieldByName(App.FieldName('Name')).AsString,
+        TIdObject.Create(FieldByName(App.FieldName('Id')).AsInteger)
+      );
+      Next;
+    end;
+  end;
+
+  App.Free;
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.CheckPermApps;
+var
+  Indx: Integer;
+begin
+  with Perm.GetAffApps do begin
+    First;
+
+    while not Eof do begin
+      Indx := IndexOf(FieldByName('EntityId').AsInteger);
+      ChLstBxAffApps.Checked[Indx] := true;
+
+      Next;
+    end;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+function TFrmPermList.IndexOf(AppId: Integer): Integer;
+var
+  I: Integer;
+begin
+  Result := -1;
+
+  for I := 0 to ChLstBxAffApps.Count - 1 do
+    if (ChLstBxAffApps.Items.Objects[I] as TIdObject).Id = AppId then begin
+      Result := I;
+      break;
+    end;
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.ChLstBxAffAppsClickCheck(Sender: TObject);
+var
+  I: Integer;
+begin
+  with ChLstBxAffApps do
+    for I := 0 to Count - 1 do
+      if Selected[I] then begin
+        if Checked[I] then
+          Perm.AddAffApp((Items.Objects[I] as TIdObject).Id)
+        else
+          Perm.RevokeAff((Items.Objects[I] as TIdObject).Id);
+
+        break;
+      end;
 end;
 
 //------------------------------------------------------------------------------

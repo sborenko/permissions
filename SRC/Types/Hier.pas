@@ -11,7 +11,7 @@ type
   private
     Entity: TItem;
   protected
-    function DatasetFields: String; override;
+    function FieldDefs: String; override;
   public
     constructor Create(Entity: TItem);
     procedure CreateTable; override;
@@ -55,9 +55,9 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-function THier.DatasetFields: String;
+function THier.FieldDefs: String;
 begin
-  Result := inherited DatasetFields;
+  Result := inherited FieldDefs;
   // Идентификатор родительского элемента
   Result := TextUtils.ConcatStr(Result, 'ParentId Integer not null' , ', ');
   // Идентификатор сущности, например, роль или группа пользователей,

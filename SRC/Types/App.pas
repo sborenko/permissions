@@ -9,16 +9,16 @@ type
 
   TApp = class(TNamedItem)
   public
-    function DataSetName: ShortString; override;
+    function DatasetName: ShortString; override;
     function FieldName(Name: ShortString): ShortString; override;
   end;
 
 implementation
 
 //------------------------------------------------------------------------------
-function TApp.DataSetName: ShortString;
+function TApp.DatasetName: ShortString;
 begin
-  Result := 'App';
+  Result := 'zz_PCmp';
 end;
 
 //------------------------------------------------------------------------------

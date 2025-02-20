@@ -12,12 +12,12 @@ type
     CdsPermBuff: TClientDataSet;
 
     FilterAppId: Integer;
-    App, PermApp, User: TItem;
+    App, PermApp, User, PermAppsList, UsrPermAppsList: TItem;
 
     procedure PrepDataSets;
     procedure FreeDataSets;
 
-    procedure PrepDataObjs;
+    procedure InitDataObjs;
     procedure FreeDataObjs;
 
     procedure PrepPermsQry;
@@ -25,7 +25,7 @@ type
     procedure PrepGrantUsrsQry;
 
     procedure OpenPerms;
-    procedure OpenAffApps;
+    procedure OpenAffApps(PermId: Integer);
     procedure OpenGrantUsrs;
 
     function GetPermBuff: TDataSet;
@@ -36,7 +36,7 @@ type
     procedure CreateTable; override;
     procedure DropTable; override;
     function DatasetName: ShortString; override;
-    function DatasetFields: String; override;
+    function FieldDefs: String; override;
 
     // Ñîçäàíèå/óäàëåíèå ðàçðåøåíèÿ
     class function Open(FilterAppId: Integer = 0): TPerm;
@@ -111,15 +111,15 @@ end;
 //··············································································
 function TPerm.DatasetName: ShortString;
 begin
-  Result := 'Perm';
+  Result := DATASET_PREFIX + 'Perm';
 end;
 
 //··············································································
 // Ïîëÿ òàáëèöû áàçû äàííûõ.
 //··············································································
-function TPerm.DatasetFields: String;
+function TPerm.FieldDefs: String;
 begin
-  Result := inherited DatasetFields;
+  Result := inherited FieldDefs;
   // Ïðèçíàê ïðèìåíèìîñòè ðàçðåøåíèÿ êî âñåì ïðèëîæåíèÿì
   Result := TextUtils.ConcatStr(Result, 'AllApps Char(1)', ',');
 end;
@@ -132,9 +132,10 @@ begin
   Result := TPerm.Create;
 
   with Result do begin
-    PrepDataObjs;
+    InitDataObjs;
     PrepDataSets;
 
+    OpenAffApps(0);
     SetFilter(FilterAppId);
   end;
 end;
@@ -150,54 +151,69 @@ begin
 end;
 
 //··············································································
-procedure TPerm.PrepDataObjs;
+procedure TPerm.InitDataObjs;
 begin
   App := TApp.Create;
   PermApp := TPermApp.Create;
   User := TUser.Create;
+  PermAppsList := TList.Create(Self, App);
+  UsrPermAppsList := TList.Create(User, PermApp);
+end;
+
+//··············································································
+procedure TPerm.FreeDataObjs;
+begin
+  App.Free;
+  PermApp.Free;
+  User.Free;
+  PermAppsList.Free;
+  UsrPermAppsList.Free;
 end;
 
 //------------------------------------------------------------------------------
 procedure TPerm.PrepDataSets;
 begin
-  QryPerms := TQuery.Create(nil);
-  QryUtils.InitQuery(QryPerms);
-  QryPerms.AfterScroll := PermAfterScroll;
-  QryPerms.UpdateObject := TUpdateSQL.Create(nil);
-
-  QryAffApps := TQuery.Create(nil);
-  QryUtils.InitQuery(QryAffApps);
-  QryAffApps.UpdateObject := TUpdateSQL.Create(nil);
-
-  QryGrantUsrs := TQuery.Create(nil);
-  QryUtils.InitQuery(QryGrantUsrs);
-  QryGrantUsrs.UpdateObject := TUpdateSQL.Create(nil);
-
   PrepPermsQry;
+  with QryPerms do begin
+    CachedUpdates := true;
+    UpdateObject := TUpdateSQL.Create(nil);
+    AfterScroll := PermAfterScroll;
+  end;
+
   PrepAffAppsQry;
+  with QryAffApps do begin
+    CachedUpdates := true;
+    UpdateObject := TUpdateSQL.Create(nil);
+  end;
+
   PrepGrantUsrsQry;
+  with QryGrantUsrs do begin
+    CachedUpdates := true;
+    UpdateObject := TUpdateSQL.Create(nil);
+  end;
+
+  PopulateUpdSQL(Self, QryPerms.UpdateObject as TUpdateSQL);
+  PopulateUpdSQL(PermAppsList, QryAffApps.UpdateObject as TUpdateSQL);
+//  PopulateUpdSQL(GrantUsr, QryGrantUsrs.UpdateObject as TUpdateSQL);
 end;
 
 //··············································································
 // Çàïðîñ íà ðàçðåøåíèÿ ñ ó÷¸òîì ôèëüòðà ïðèëîæåíèé.
 //··············································································
 procedure TPerm.PrepPermsQry;
-var
-  List: TItem;
 begin
-  List := TList.Create(Self, App);
+  QryPerms := TQuery.Create(nil);
+  QryUtils.InitQuery(QryPerms);
 
   with QryPerms do begin
     SQL.Text :=
-      'select * ' +
-      'from ' + List.DatasetName + ' pa ' +
-        'left join ' + DatasetName + ' p ' +
-          'on p.Id = pa.OwnerId ' +
+      'select distinct p.* ' +
+      'from ' + DatasetName + ' p ' +
+        'left join ' + PermAppsList.DatasetName + ' pa ' +
+          'on pa.OwnerId = p.Id ' +
       'where pa.EntityId = :FilterAppId or :FilterAppId = 0';
     Prepare;
   end;
-
-  List.Free;
 end;
 
 //··············································································
@@ -205,22 +221,19 @@ end;
 // ðàçðåøåíèå.
 //··············································································
 procedure TPerm.PrepAffAppsQry;
-var
-  List: TItem;
 begin
-  List := TList.Create(Self, App);
+  QryAffApps := TQuery.Create(nil);
+  QryUtils.InitQuery(QryAffApps);
 
   with QryAffApps do begin
     SQL.Text :=
       'select * ' +
-      'from ' + List.DatasetName + ' pa  ' +
+      'from ' + PermAppsList.DatasetName + ' pa  ' +
         'left join ' + App.DataSetName + ' a ' +
           'on a.' + App.FieldName('Id') + ' = pa.EntityId ' +
       'where pa.OwnerId = :PermId';
     Prepare;
   end;
-
-  List.Free;
 end;
 
 //··············································································
@@ -228,16 +241,16 @@ end;
 // ñ ó÷¸òîì ôèëüòðà ïðèëîæåíèé.
 //··············································································
 procedure TPerm.PrepGrantUsrsQry;
-var
-  List: TItem;
 begin
-  List := TList.Create(User, PermApp);
+  QryGrantUsrs := TQuery.Create(nil);
+  QryUtils.InitQuery(QryGrantUsrs);
 
   with QryGrantUsrs do begin
     SQL.Text :=
       'select * ' +
       'from ' + PermApp.DatasetName + ' pa ' +
-        'left join ' + List.DatasetName + ' upa on upa.EntityId = pa.Id ' +
+        'left join ' + UsrPermAppsList.DatasetName + ' upa ' +
+          'on upa.EntityId = pa.Id ' +
         'left join ' + User.DatasetName + ' u ' +
           'on u.' + User.FieldName('Id') + ' = upa.OwnerId ' +
         'left join ' + App.DatasetName + ' ' +
@@ -246,8 +259,6 @@ begin
         'and pa.AppId = :FilterAppId or :FilterAppId = 0';
     Prepare;
   end;
-
-  List.Free;
 end;
 
 //··············································································
@@ -267,13 +278,13 @@ begin
 end;
 
 //··············································································
-procedure TPerm.OpenAffApps;
+procedure TPerm.OpenAffApps(PermId: Integer);
 begin
   with QryAffApps do begin
     DisableControls;
     Close;
 
-    ParamByName('PermId').AsInteger := QryPerms.FieldByName('Id').AsInteger;
+    ParamByName('PermId').AsInteger := PermId;
     Open;
 
     EnableControls;
@@ -325,9 +336,11 @@ begin
 end;
 
 //··············································································
+// Ïî èçìåíåíèè ïîçèöèè â Ðàçðåøåíèÿõ, ïåðåçàãðóæàåì ïðèëîæåíèÿ
+//··············································································
 procedure TPerm.PermAfterScroll(DataSet: TDataSet);
 begin
-  OpenAffApps;
+  OpenAffApps(DataSet.FieldByName('Id').AsInteger);
 end;
 
 //------------------------------------------------------------------------------
@@ -381,9 +394,9 @@ begin
         FieldByName('Id').AsInteger := QryUtils.GenerateId(DatasetName);
 
       Post;
-      
+
+      Database.ApplyUpdates([QryPerms]);
       CommitUpdates;
-      ApplyUpdates;
     end;
 
     Delete;
@@ -417,8 +430,8 @@ begin
     FieldByName('EntityId').AsInteger := AppId;
     Post;
 
+    Database.ApplyUpdates([QryAffApps]);
     CommitUpdates;
-    ApplyUpdates;
   end;
 end;
 
@@ -432,8 +445,8 @@ begin
     );
     Delete;
 
+    Database.ApplyUpdates([QryAffApps]);
     CommitUpdates;
-    ApplyUpdates;
   end;
 end;
 
@@ -447,8 +460,8 @@ begin
     FieldByName('EntityId').AsInteger := AppId;
     Post;
 
+    Database.ApplyUpdates([QryGrantUsrs]);
     CommitUpdates;
-    ApplyUpdates;
   end;
 end;
 
@@ -470,14 +483,6 @@ begin
 
   if CdsPermBuff <> nil then
     CdsPermBuff.Free;
-end;
-
-//··············································································
-procedure TPerm.FreeDataObjs;
-begin
-  App.Free;
-  PermApp.Free;
-  User.Free;
 end;
 
 end.

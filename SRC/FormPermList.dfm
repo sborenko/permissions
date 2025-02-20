@@ -1,6 +1,6 @@
 object FrmPermList: TFrmPermList
-  Left = 566
-  Top = 214
+  Left = 75
+  Top = 122
   Width = 1107
   Height = 709
   Caption = 'Permission List'
@@ -21,19 +21,19 @@ object FrmPermList: TFrmPermList
   object SplitterMain: TSplitter
     Left = 553
     Top = 0
-    Height = 634
+    Height = 629
   end
   object PanelRight: TPanel
     Left = 556
     Top = 0
-    Width = 543
-    Height = 634
+    Width = 535
+    Height = 629
     Align = alClient
     TabOrder = 0
     object SplitterRight: TSplitter
       Left = 1
       Top = 153
-      Width = 541
+      Width = 533
       Height = 5
       Cursor = crVSplit
       Align = alTop
@@ -42,14 +42,14 @@ object FrmPermList: TFrmPermList
     object PanelAffApps: TPanel
       Left = 1
       Top = 1
-      Width = 541
+      Width = 533
       Height = 152
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
       OnResize = PanelAffAppsResize
       DesignSize = (
-        541
+        533
         152)
       object LblAffectedApps: TLabel
         Left = 8
@@ -61,8 +61,9 @@ object FrmPermList: TFrmPermList
       object ChLstBxAffApps: TCheckListBox
         Left = 0
         Top = 24
-        Width = 541
+        Width = 534
         Height = 125
+        OnClickCheck = ChLstBxAffAppsClickCheck
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
         PopupMenu = PopupAffApps
@@ -72,16 +73,16 @@ object FrmPermList: TFrmPermList
     object PanelGrantUsrs: TPanel
       Left = 1
       Top = 158
-      Width = 541
-      Height = 475
+      Width = 533
+      Height = 470
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       object PageCtrlGrantPerms: TPageControl
         Left = 0
         Top = 0
-        Width = 541
-        Height = 475
+        Width = 533
+        Height = 470
         ActivePage = TabGrantUsrs
         Align = alClient
         PopupMenu = PopupGrantPerm
@@ -95,8 +96,8 @@ object FrmPermList: TFrmPermList
           ImageIndex = 1
           OnResize = TabGrantUsrsResize
           DesignSize = (
-            533
-            444)
+            525
+            439)
           object ChLstBxUsrPermApps: TCheckListBox
             Left = 0
             Top = 0
@@ -116,8 +117,8 @@ object FrmPermList: TFrmPermList
   end
   object PanelBottom: TPanel
     Left = 0
-    Top = 634
-    Width = 1099
+    Top = 629
+    Width = 1091
     Height = 41
     Align = alBottom
     TabOrder = 1
@@ -126,13 +127,13 @@ object FrmPermList: TFrmPermList
     Left = 0
     Top = 0
     Width = 553
-    Height = 634
+    Height = 629
     Align = alLeft
     TabOrder = 2
     OnResize = PanelPermsResize
     DesignSize = (
       553
-      634)
+      629)
     object LblFilter: TLabel
       Left = 8
       Top = 8
@@ -203,5 +204,11 @@ object FrmPermList: TFrmPermList
     object NRevokePerm: TMenuItem
       Caption = 'Revoke Permission'
     end
+  end
+  object QryApps: TQuery
+    SQL.Strings = (
+      '')
+    Left = 581
+    Top = 41
   end
 end

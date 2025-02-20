@@ -98,7 +98,7 @@ end;
 //------------------------------------------------------------------------------
 function TUsrGroup.DataSetName: ShortString;
 begin
-  Result := 'UsrGrp';
+  Result := DATASET_PREFIX + 'UsrGrp';
 end;
 
 end.
