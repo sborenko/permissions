@@ -4,17 +4,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Grids, DBGrids, StdCtrls, DBCtrls, CheckLst, ExtCtrls, DB,
-  ComCtrls, Menus, FormList, Permission, DBTables;
+  Dialogs, Grids, DBGrids, StdCtrls, DBCtrls, ExtCtrls, DB,
+  ComCtrls, Menus, FormList, DBTables, CheckLst, CustCheckListBox,
+  Permission, Buttons;
 
 type
-  TIdObject = class
-    Id: Integer;
-  public
-    constructor Create(Id: Integer); reintroduce;
-    destructor Destroy; override;
-  end;
-
   TFrmPermList = class(TFrmList)
     PanelRight: TPanel;
     PanelBottom: TPanel;
@@ -28,7 +22,6 @@ type
     PanelPerms: TPanel;
     DbgrPerms: TDBGrid;
     LblFilter: TLabel;
-    DbCmbBoxAppFilter: TDBComboBox;
     PopupPerms: TPopupMenu;
     PageCtrlGrantPerms: TPageControl;
     TabGrantRoles: TTabSheet;
@@ -40,11 +33,15 @@ type
     PopupAffApps: TPopupMenu;
     NSetApp: TMenuItem;
     NResetApp: TMenuItem;
-    ChLstBxUsrPermApps: TCheckListBox;
+    ChLstBxUsrApps: TCheckListBox;
     PopupGrantPerm: TPopupMenu;
     NGrantPerm: TMenuItem;
     NRevokePerm: TMenuItem;
     QryApps: TQuery;
+    QryAppFilter: TQuery;
+    ComboAppFilter: TDBLookupComboBox;
+    DsrcAppFilter: TDataSource;
+    BtnClearAppFilter: TSpeedButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure PanelPermsResize(Sender: TObject);
     procedure PanelAffAppsResize(Sender: TObject);
@@ -53,13 +50,26 @@ type
     procedure NAddPermissionClick(Sender: TObject);
     procedure NEditPermissionClick(Sender: TObject);
     procedure ChLstBxAffAppsClickCheck(Sender: TObject);
-    procedure DsrcPermsDataChange(Sender: TObject; Field: TField);
+    procedure ChLstBxUsrAppsClickCheck(Sender: TObject);
+    procedure ComboAppFilterClick(Sender: TObject);
+    procedure BtnClearAppFilterClick(Sender: TObject);
   private
     Perm: TPerm;
 
+    procedure OpenAppFilterQry;
     procedure LoadApps;
-    procedure CheckPermApps;
-  public
+    procedure CheckAffApps;
+
+    procedure LoadUsrs;
+    procedure CheckGrantUsrs(AppId: Integer);
+
+    procedure OnPermScrollHnd;
+    procedure OnAffAppScrollHnd(Sender: TObject);
+
+    procedure OnAffAppAddHnd(AppId: Integer);
+    procedure OnAffAppRevokeHnd(AppId: Integer);
+
+    function GetSelectedAppId: Integer;
   end;
 
 var
@@ -68,30 +78,29 @@ var
 implementation
 
 uses
-  App, DModMain, FormEditPerm, QryLib;
+  App, DModMain, FormEditPerm, Item, List, QryLib, TextLib, User;
 
 {$R *.dfm}
 
 //------------------------------------------------------------------------------
-constructor TIdObject.Create(Id: Integer);
-begin
-  Self.Id := Id;
-end;
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-destructor TIdObject.Destroy;
-begin
-  inherited Destroy;
-end;
-
-//------------------------------------------------------------------------------
 procedure TFrmPermList.FormCreate(Sender: TObject);
 begin
+  ChLstBxAffApps.OnChange := OnAffAppScrollHnd;
+  ChLstBxUsrApps.Enabled := false;
+
   Perm := TPerm.Open;
+  Perm.OnPermScroll := OnPermScrollHnd;
+  Perm.OnAffAppAdd := OnAffAppAddHnd;
+  Perm.OnAffAppRevoke := OnAffAppRevokeHnd;
+
   DsrcPerms.DataSet := Perm.GetPerms;
 
+  OpenAppFilterQry;
+
   LoadApps;
-  CheckPermApps;
+  CheckAffApps;
+
+  LoadUsrs;
 end;
 
 //------------------------------------------------------------------------------
@@ -101,6 +110,25 @@ begin
   Action := caFree;
 
   TPerm.Release(Perm);
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.OpenAppFilterQry;
+var
+  App: TApp;
+begin
+  App := TApp.Create;
+
+  QryUtils.InitQuery(QryAppFilter);
+  with QryAppFilter do begin
+    SQL.Text :=
+      'select * ' +
+      'from ' + App.DecorDsName + ' ' +
+      'order by ' + App.FieldName('Notes');
+    Open;
+  end;
+
+  App.Free;
 end;
 
 //------------------------------------------------------------------------------
@@ -120,9 +148,12 @@ begin
 
     while not Eof do begin
       ChLstBxAffApps.AddItem(
-        FieldByName(App.FieldName('Name')).AsString,
+        TextUtils.PadRight(
+          FieldByName(App.FieldName('Code')).AsString, ' ', 25) +
+          FieldByName(App.FieldName('Name')).AsString,
         TIdObject.Create(FieldByName(App.FieldName('Id')).AsInteger)
       );
+
       Next;
     end;
   end;
@@ -131,49 +162,143 @@ begin
 end;
 
 //------------------------------------------------------------------------------
-procedure TFrmPermList.CheckPermApps;
-var
-  AppId, I: Integer;
+procedure TFrmPermList.OnPermScrollHnd;
 begin
-{
-  for I := 0 to ChLstBxAffApps.Count - 1 do
+  CheckAffApps;
+  CheckGrantUsrs(GetSelectedAppId);
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.CheckAffApps;
+var
+  App: TItem;
+  AppId, I: Integer;
+  AffApps: TDataSet;
+begin
+  App := TApp.Create;
+  AffApps := Perm.GetAffApps;
+
+  for I := 0 to ChLstBxAffApps.Count - 1 do begin
     AppId := (ChLstBxAffApps.Items.Objects[I] as TIdObject).Id;
 
-    if Perm.GetAffApps.Locate([])
-  with  do begin
-    First;
-
-    while not Eof do begin
-      Indx := IndexOf(FieldByName('EntityId').AsInteger);
-      ChLstBxAffApps.Checked[Indx] := true;
-
-      Next;
-    end;
+    ChLstBxAffApps.Checked[I] := AffApps.Locate(App.RefFldName, AppId, []);
   end;
-}
+  
+  App.Free;
 end;
 
 //------------------------------------------------------------------------------
 procedure TFrmPermList.ChLstBxAffAppsClickCheck(Sender: TObject);
 var
-  I: Integer;
+  AppId, Indx: Integer;
 begin
-  with ChLstBxAffApps do
-    for I := 0 to Count - 1 do
-      if Selected[I] then begin
-        if Checked[I] then
-          Perm.AddAffApp((Items.Objects[I] as TIdObject).Id)
-        else
-          Perm.RevokeAff((Items.Objects[I] as TIdObject).Id);
+  with ChLstBxAffApps do begin
+    Indx := GetSelectedIndx;
+    AppId := (Items.Objects[Indx] as TIdObject).Id;
 
-        break;
-      end;
+    if Checked[Indx] then
+      Perm.AddAffApp(AppId)
+    else
+      Perm.RevokeApp(AppId);
+  end;
+  
+  CheckGrantUsrs(AppId);
+end;
+
+//------------------------------------------------------------------------------
+function TFrmPermList.GetSelectedAppId: Integer;
+var
+  Indx: Integer;
+begin
+  with ChLstBxAffApps do begin
+    Indx := GetSelectedIndx;
+
+    if Indx = -1 then
+      Result := 0
+    else
+      Result := (Items.Objects[Indx] as TIdObject).Id;
+  end;
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.LoadUsrs;
+var
+  User: TUser;
+begin
+  User := TUser.Open;
+
+  with User, GetUsrs do begin
+    First;
+
+    while not Eof do begin
+      ChLstBxUsrApps.AddItem(
+        TextUtils.PadRight(
+          FieldByName(FieldName('Name')).AsString, ' ', 25) +
+          FieldByName(FieldName('Notes')).AsString,
+        TIdObject.Create(FieldByName(FieldName('Id')).AsInteger)
+      );
+
+      Next;
+    end;
+  end;
+
+  TUser.Release(User);
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.OnAffAppScrollHnd(Sender: TObject);
+var
+  AppId: Integer;
+begin
+  AppId := GetSelectedAppId;
+  CheckGrantUsrs(AppId);
+  ChLstBxUsrApps.Enabled := AppId <> 0;
+end;
+
+//------------------------------------------------------------------------------
+// Проставляем check'и для пользователей, которым разрешён доступ к приложению
+// AppId
+//------------------------------------------------------------------------------
+procedure TFrmPermList.CheckGrantUsrs(AppId: Integer);
+var
+  User: TItem;
+  UserId, I: Integer;
+  UserPermApps: TDataSet;
+begin
+  User := TUser.Create;
+  UserPermApps := Perm.GetGrantUsrs(AppId);
+
+  for I := 0 to ChLstBxUsrApps.Count - 1 do begin
+    UserId := (ChLstBxUsrApps.Items.Objects[I] as TIdObject).Id;
+
+    ChLstBxUsrApps.Checked[I] :=
+      UserPermApps.Locate(User.RefFldName, UserId, []);
+  end;
+
+  User.Free;
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.ChLstBxUsrAppsClickCheck(Sender: TObject);
+var
+  AppId, UserId, Indx: Integer;
+begin
+  Indx := ChLstBxAffApps.GetSelectedIndx;
+  AppId := (ChLstBxAffApps.Items.Objects[Indx] as TIdObject).Id;
+
+  Indx := ChLstBxUsrApps.GetSelectedIndx;
+  UserId := (ChLstBxUsrApps.Items.Objects[Indx] as TIdObject).Id;
+
+  if ChLstBxUsrApps.Checked[Indx] then
+    Perm.GrantPerm(UserId, AppId)
+  else
+    Perm.RevokePerm(UserId, AppId);
 end;
 
 //------------------------------------------------------------------------------
 procedure TFrmPermList.PanelPermsResize(Sender: TObject);
 begin
-  DbCmbBoxAppFilter.Width := PanelPerms.Width - DbCmbBoxAppFilter.Left - 3;
+  ComboAppFilter.Width := PanelPerms.Width - ComboAppFilter.Left - 3;
 
   DbgrPerms.Width := PanelPerms.Width - DbgrPerms.Left - 3;
   DbgrPerms.Height := PanelPerms.Height - DbgrPerms.Top - 3;
@@ -189,8 +314,8 @@ end;
 //------------------------------------------------------------------------------
 procedure TFrmPermList.TabGrantUsrsResize(Sender: TObject);
 begin
-  ChLstBxUsrPermApps.Width := TabGrantUsrs.ClientWidth;
-  ChLstBxUsrPermApps.Height := TabGrantUsrs.ClientHeight;
+  ChLstBxUsrApps.Width := TabGrantUsrs.ClientWidth;
+  ChLstBxUsrApps.Height := TabGrantUsrs.ClientHeight;
 end;
 
 //------------------------------------------------------------------------------
@@ -211,9 +336,29 @@ begin
     Perm.CancelUpdate;
 end;
 
-procedure TFrmPermList.DsrcPermsDataChange(Sender: TObject; Field: TField);
+//------------------------------------------------------------------------------
+procedure TFrmPermList.OnAffAppAddHnd;
 begin
-  CheckPermApps;
+end;
+
+//------------------------------------------------------------------------------
+procedure TFrmPermList.OnAffAppRevokeHnd;
+begin
+end;
+
+procedure TFrmPermList.ComboAppFilterClick(Sender: TObject);
+var
+  App: TApp;
+begin
+  App := TApp.Create;
+  Perm.SetFilter(QryAppFilter.FieldByName(App.FieldName('Id')).AsInteger);
+  App.Free;
+end;
+
+procedure TFrmPermList.BtnClearAppFilterClick(Sender: TObject);
+begin
+  ComboAppFilter.KeyValue := 0;
+  Perm.SetFilter(0);
 end;
 
 end.

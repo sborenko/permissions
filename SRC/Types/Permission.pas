@@ -6,13 +6,15 @@ uses
   Classes, Db, DbClient, DbTables, Item, NamedItem;
 
 type
+  TPermScrollEvent = procedure of object;
+
   TPerm = class(TNamedItem)
   private
     QryPerms, QryAffApps, QryGrantUsrs: TQuery;
     CdsPermBuff: TClientDataSet;
 
     FilterAppId: Integer;
-    App, User, PermAppList, UsrPermAppList: TItem;
+    App, User, PermApps, UserApps: TItem;
 
     procedure PrepDataSets;
     procedure FreeDataSets;
@@ -26,12 +28,21 @@ type
 
     procedure OpenPerms;
     procedure OpenAffApps(PermId: Integer);
-    procedure OpenGrantUsrs;
+    procedure OpenGrantUsrs(AppId: Integer);
 
     function GetPermBuff: TDataSet;
 
     procedure PermAfterScroll(DataSet: TDataSet);
+    procedure ProcessPermissionChange;
   public
+    OnPermAdd: TItemAddDelEvent;
+    OnPermUpd: TItemAddDelEvent;
+    OnPermDel: TItemAddDelEvent;
+    OnPermScroll: TPermScrollEvent;
+
+    OnAffAppAdd: TItemAddDelEvent;
+    OnAffAppRevoke: TItemAddDelEvent;
+
     // Óïðàâëåíèå ñòðóêòóðîé áîçû äàííûõ
     procedure CreateTable; override;
     procedure DropTable; override;
@@ -45,7 +56,7 @@ type
     // Äîñòóï ê äàííûì
     function GetPerms: TDataSet;
     function GetAffApps: TDataSet;
-    function GetGrantUsrs: TDataSet;
+    function GetGrantUsrs(AppId: Integer): TDataSet;
 
     // Êîìàíäû óïðàâëåíèÿ îáúåêòîì
     procedure SetFilter(AppId: Integer);
@@ -58,7 +69,7 @@ type
     procedure CancelUpdate;
 
     procedure AddAffApp(AppId: Integer);
-    procedure RevokeAff(AppId: Integer);
+    procedure RevokeApp(AppId: Integer);
 
     procedure GrantPerm(UserId, AppId: Integer);
     procedure RevokePerm(UserId, AppId: Integer);
@@ -81,7 +92,7 @@ begin
 
   // Ñïèñîê ïðèëîæåíèé, ê êîòîðûì ïðèìåíèìî ðàçðåøåíèå
   Entity := TApp.Create;
-  with TList.Create(Self, Entity) do begin
+  with TItemList.Create(Self, Entity) do begin
     CreateTable;
     Free;
   end;
@@ -97,7 +108,7 @@ var
   Entity: TItem;
 begin
   Entity := TApp.Create;
-  with TList.Create(Self, Entity) do begin
+  with TItemList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;;
@@ -155,8 +166,8 @@ procedure TPerm.InitDataObjs;
 begin
   App := TApp.Create;
   User := TUser.Create;
-  PermAppList := TList.Create(Self, App);
-  UsrPermAppList := TList.Create(User, PermAppList);
+  PermApps := TItemList.Create(Self, App);
+  UserApps := TItemList.Create(User, PermApps);
 end;
 
 //··············································································
@@ -164,8 +175,8 @@ procedure TPerm.FreeDataObjs;
 begin
   App.Free;
   User.Free;
-  PermAppList.Free;
-  UsrPermAppList.Free;
+  PermApps.Free;
+  UserApps.Free;
 end;
 
 //------------------------------------------------------------------------------
@@ -191,8 +202,8 @@ begin
   end;
 
   PopulateUpdSQL(Self, QryPerms.UpdateObject as TUpdateSQL);
-  PopulateUpdSQL(PermAppList, QryAffApps.UpdateObject as TUpdateSQL);
-//  PopulateUpdSQL(GrantUsr, QryGrantUsrs.UpdateObject as TUpdateSQL);
+  PopulateUpdSQL(PermApps, QryAffApps.UpdateObject as TUpdateSQL);
+  PopulateUpdSQL(UserApps, QryGrantUsrs.UpdateObject as TUpdateSQL);
 end;
 
 //··············································································
@@ -207,9 +218,9 @@ begin
     SQL.Text :=
       'select distinct p.* ' +
       'from ' + DecorDsName + ' p ' +
-        'left join ' + PermAppList.DecorDsName + ' pa ' +
-          'on pa.' + DatasetName + 'Id = p.Id ' +
-      'where pa.' + App.DatasetName + 'Id = :FilterAppId ' +
+        'left join ' + PermApps.DecorDsName + ' pa ' +
+          'on pa.' + RefFldName + ' = p.Id ' +
+      'where pa.' + App.RefFldName + ' = :FilterAppId ' +
         'or :FilterAppId = 0';
     Prepare;
   end;
@@ -228,9 +239,9 @@ begin
     SQL.Text :=
       'select * ' +
       'from ' + App.DecorDsName + ' a ' +
-        'join ' + PermAppList.DecorDsName + ' pa ' +
-          'on pa.' + App.DatasetName + 'Id = a.' + App.FieldName('Id') + ' ' +
-      'where pa.' + DatasetName + 'Id = :PermId';
+        'join ' + PermApps.DecorDsName + ' pa ' +
+          'on pa.' + App.RefFldName + ' = a.' + App.FieldName('Id') + ' ' +
+      'where pa.' + RefFldName + ' = :PermId';
     Prepare;
   end;
 end;
@@ -248,14 +259,14 @@ begin
     SQL.Text :=
       'select * ' +
       'from ' + User.DecorDsName + ' u ' +
-        'join ' + UsrPermAppList.DecorDsName + ' upa ' +
-          'on upa.' + User.DatasetName + 'Id = u.' + User.FieldName('Id') + ' ' +
-        'join ' + PermAppList.DecorDsName + ' pa ' +
-          'on pa.Id = upa.' + PermAppList.DatasetName + 'Id ' +
+        'join ' + UserApps.DecorDsName + ' upa ' +
+          'on upa.' + User.RefFldName + ' = u.' + User.FieldName('Id') + ' ' +
+        'join ' + PermApps.DecorDsName + ' pa ' +
+          'on pa.Id = upa.' + PermApps.RefFldName + ' ' +
         'join ' + App.DecorDsName + ' a ' +
-          'on a.' + App.FieldName('Id') + ' = pa.' + App.DatasetName + 'Id ' +
-      'where pa.' + DatasetName + 'Id = :PermId ' +
-        'and pa.' + App.DatasetName + 'Id = :FilterAppId or :FilterAppId = 0';
+          'on a.' + App.FieldName('Id') + ' = pa.' + App.RefFldName + ' ' +
+      'where pa.' + RefFldName + ' = :PermId ' +
+        'and pa.' + App.RefFldName + ' = :AppId';
     Prepare;
   end;
 end;
@@ -291,14 +302,14 @@ begin
 end;
 
 //··············································································
-procedure TPerm.OpenGrantUsrs;
+procedure TPerm.OpenGrantUsrs(AppId: Integer);
 begin
   with QryGrantUsrs do begin
     DisableControls;
     Close;
 
     ParamByName('PermId').AsInteger := QryPerms.FieldByName('Id').AsInteger;
-    ParamByName('FilterAppId').AsInteger := FilterAppId;
+    ParamByName('AppId').AsInteger := AppId;
     Open;
 
     EnableControls;
@@ -320,8 +331,10 @@ begin
 end;
 
 //··············································································
-function TPerm.GetGrantUsrs: TDataSet;
+function TPerm.GetGrantUsrs(AppId: Integer): TDataSet;
 begin
+  OpenGrantUsrs(AppId);
+
   Result := QryGrantUsrs;
 end;
 
@@ -339,7 +352,16 @@ end;
 //··············································································
 procedure TPerm.PermAfterScroll(DataSet: TDataSet);
 begin
-  OpenAffApps(DataSet.FieldByName('Id').AsInteger);
+  ProcessPermissionChange;
+end;
+
+//------------------------------------------------------------------------------
+procedure TPerm.ProcessPermissionChange;
+begin
+  OpenAffApps(QryPerms.FieldByName('Id').AsInteger);
+
+  if Assigned(OnPermScroll) then
+    OnPermScroll;
 end;
 
 //------------------------------------------------------------------------------
@@ -348,9 +370,8 @@ end;
 procedure TPerm.SetFilter(AppId: Integer);
 begin
   FilterAppId := AppId;
-
   OpenPerms;
-  OpenGrantUsrs;
+  ProcessPermissionChange;
 end;
 
 //------------------------------------------------------------------------------
@@ -396,6 +417,13 @@ begin
 
       Database.ApplyUpdates([QryPerms]);
       CommitUpdates;
+
+      if NewRec then begin
+        if Assigned(OnPermAdd) then
+          OnPermAdd(FieldByName('Id').AsInteger);
+      end else
+        if Assigned(OnPermUpd) then
+          OnPermUpd(FieldByName('Id').AsInteger);
     end;
 
     Delete;
@@ -417,6 +445,9 @@ end;
 procedure TPerm.DeletePerm(PermId: Integer);
 begin
   QryPerms.Delete;
+
+  if Assigned(OnPermDel) then
+    OnPermDel(PermId);
 end;
 
 //··············································································
@@ -425,24 +456,24 @@ begin
   with QryAffApps do begin
     Append;
     FieldByName('Id').AsInteger := QryUtils.GenerateId(DecorDsName);
-
-    FieldByName(DatasetName + 'Id').AsInteger :=
-      QryPerms.FieldByName('Id').AsInteger;
-
-    FieldByName(App.DatasetName + 'Id').AsInteger := AppId;
+    FieldByName(RefFldName).AsInteger := QryPerms.FieldByName('Id').AsInteger;
+    FieldByName(App.RefFldName).AsInteger := AppId;
     Post;
 
     Database.ApplyUpdates([QryAffApps]);
     CommitUpdates;
   end;
+
+  if Assigned(OnAffAppAdd) then
+    OnAffAppAdd(AppId);
 end;
 
 //··············································································
-procedure TPerm.RevokeAff(AppId: Integer);
+procedure TPerm.RevokeApp(AppId: Integer);
 begin
   with QryAffApps do begin
     Locate(
-      DatasetName + 'Id;' + App.DatasetName + 'Id',
+      RefFldName + ';' + App.RefFldName,
       VarArrayOf([QryPerms.FieldByName('Id').AsInteger, AppId]), []
     );
     Delete;
@@ -450,19 +481,29 @@ begin
     Database.ApplyUpdates([QryAffApps]);
     CommitUpdates;
   end;
+
+  if Assigned(OnAffAppRevoke) then
+    OnAffAppRevoke(AppId);
 end;
 
 //··············································································
 procedure TPerm.GrantPerm(UserId, AppId: Integer);
+var
+  PermAppId: Integer;
 begin
+  // Íàõîäèì Ïðèëîæåíèå òåêóùåãî Ðàçðåøåíèÿ
+  with QryAffApps do begin
+    Locate(RefFldName + ';' + App.RefFldName,
+      VarArrayOf([QryPerms.FieldByName('Id').AsInteger, AppId]), []);
+
+    PermAppId := FieldByName('Id').AsInteger;
+  end;
+
   with QryGrantUsrs do begin
     Append;
     FieldByName('Id').AsInteger := QryUtils.GenerateId(DecorDsName);
-
-    FieldByName(User.DatasetName + 'Id').AsInteger :=
-      QryPerms.FieldByName('Id').AsInteger;
-      
-    FieldByName(App.DatasetName + 'Id').AsInteger := AppId;
+    FieldByName(User.RefFldName).AsInteger := UserId;
+    FieldByName(PermApps.RefFldName).AsInteger := PermAppId;
     Post;
 
     Database.ApplyUpdates([QryGrantUsrs]);

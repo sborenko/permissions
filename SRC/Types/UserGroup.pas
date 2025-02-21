@@ -34,7 +34,7 @@ begin
 
   // Список пользователей
   Entity := TUser.Create;
-  with TList.Create(Self, Entity) do begin
+  with TItemList.Create(Self, Entity) do begin
     CreateTable;
     Free;
   end;
@@ -42,7 +42,7 @@ begin
 
   // Список ролей
   Entity := TRole.Create;
-  with TList.Create(Self, Entity) do begin
+  with TItemList.Create(Self, Entity) do begin
     CreateTable;
     Free;
   end;
@@ -52,8 +52,8 @@ begin
 //  Entity := TPermApp.Create;
   Perm := TPerm.Create;
   App := TApp.Create;
-  Entity := TList.Create(Perm, App);
-  with TList.Create(Self, Entity) do begin
+  Entity := TItemList.Create(Perm, App);
+  with TItemList.Create(Self, Entity) do begin
     CreateTable;
     Free;
   end;
@@ -73,7 +73,7 @@ begin
 
   // Список пользователей
   Entity := TUser.Create;
-  with TList.Create(Self, Entity) do begin
+  with TItemList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;
@@ -81,7 +81,7 @@ begin
 
   // Список ролей
   Entity := TRole.Create;
-  with TList.Create(Self, Entity) do begin
+  with TItemList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;
@@ -91,8 +91,8 @@ begin
 //  Entity := TPermApp.Create;
   Perm := TPerm.Create;
   App := TApp.Create;
-  Entity := TList.Create(Perm, App);
-  with TList.Create(Self, Entity) do begin
+  Entity := TItemList.Create(Perm, App);
+  with TItemList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;

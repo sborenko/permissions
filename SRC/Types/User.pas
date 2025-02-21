@@ -3,24 +3,100 @@ unit User;
 interface
 
 uses
-  NamedItem;
+  Db, DbTables, NamedItem;
 
 type
   TUser = class(TNamedItem)
+  private
+    QryUsrs: TQuery;
+
+    procedure PrepDataSets;
+    procedure FreeDataSets;
+
+    procedure PrepUsrsQry;
+
+    procedure OpenUsrs;
   public
+    class function Open: TUser;
+    class procedure Release(User: TUser);
+
+    function GetUsrs: TDataSet;
+
     procedure CreateTable; override;
     procedure DropTable; override;
 
     function DatasetName: ShortString; override;
     function DecorDsName: ShortString; override;
-    
+
     function FieldName(Name: ShortString): ShortString; override;
   end;
 
 implementation
 
 uses
-  App, Item, Permission, Role, List, SysUtils;
+  App, Item, Permission, Role, List, QryLib, SysUtils;
+
+//------------------------------------------------------------------------------
+class function TUser.Open: TUser;
+begin
+  Result := TUser.Create;
+
+  with Result do begin
+    PrepDataSets;
+    OpenUsrs;
+  end;
+end;
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+class procedure TUser.Release(User: TUser);
+begin
+  with User do begin
+    FreeDataSets;
+//    FreeDataObjs;
+    Free;
+  end;
+end;
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+procedure TUser.PrepDataSets;
+begin
+  PrepUsrsQry;
+end;
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+procedure TUser.FreeDataSets;
+begin
+  QryUsrs.Free;
+end;
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+procedure TUser.PrepUsrsQry;
+begin
+  QryUsrs := TQuery.Create(nil);
+  QryUtils.InitQuery(QryUsrs);
+
+  with QryUsrs do begin
+    SQL.Text :=
+      'select * ' +
+      'from ' + DecorDsName + ' ' +
+      'where Vkl = "Y"';
+    Prepare;
+  end;
+end;
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+procedure TUser.OpenUsrs;
+begin
+  QryUsrs.Open;
+end;
+
+//------------------------------------------------------------------------------
+// Доступ к данным
+//------------------------------------------------------------------------------
+function TUser.GetUsrs: TDataSet;
+begin
+  Result := QryUsrs;
+end;
 
 //------------------------------------------------------------------------------
 procedure TUser.CreateTable;
@@ -32,7 +108,7 @@ begin
 
   // Список ролей
   Entity := TRole.Create;
-  with TList.Create(Self, Entity) do begin
+  with TItemList.Create(Self, Entity) do begin
     CreateTable;
     Free;
   end;
@@ -41,8 +117,8 @@ begin
   // Список разрешений к приложениям
   Perm := TPerm.Create;
   App := TApp.Create;
-  Entity := TList.Create(Perm, App);
-  with TList.Create(Self, Entity) do begin
+  Entity := TItemList.Create(Perm, App);
+  with TItemList.Create(Self, Entity) do begin
     CreateTable;
     Free;
   end;
@@ -57,7 +133,7 @@ var
   Perm, App, Entity: TItem;
 begin
   Entity := TRole.Create;
-  with TList.Create(Self, Entity) do begin
+  with TItemList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;
@@ -65,8 +141,8 @@ begin
 
   Perm := TPerm.Create;
   App := TApp.Create;
-  Entity := TList.Create(Perm, App);
-  with TList.Create(Self, Entity) do begin
+  Entity := TItemList.Create(Perm, App);
+  with TItemList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;

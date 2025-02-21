@@ -3,7 +3,7 @@ unit DModMain;
 interface
 
 uses
-  DB, DBTables, SysUtils, Classes;
+  Classes, DB, DBTables, SysUtils;
 
 type
   TDmMain = class(TDataModule)

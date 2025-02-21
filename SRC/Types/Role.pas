@@ -35,8 +35,8 @@ begin
 //  Entity := TPermApp.Create;
   Perm := TPerm.Create;
   App := TApp.Create;
-  Entity := TList.Create(Perm, App);
-  with TList.Create(Self, Entity) do begin
+  Entity := TItemList.Create(Perm, App);
+  with TItemList.Create(Self, Entity) do begin
     CreateTable;
     Free;
   end;
@@ -56,8 +56,8 @@ begin
 //  Entity := TPermApp.Create;
   Perm := TPerm.Create;
   App := TApp.Create;
-  Entity := TList.Create(Perm, App);
-  with TList.Create(Self, Entity) do begin
+  Entity := TItemList.Create(Perm, App);
+  with TItemList.Create(Self, Entity) do begin
     DropTable;
     Free;
   end;

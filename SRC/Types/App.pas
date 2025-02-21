@@ -34,6 +34,8 @@ begin
   // дКЪ нох
   if Name = 'Id' then
     Result := 'Nr'
+  else if Name = 'Code' then
+    Result := 'ShCmp'
   else if Name = 'Name' then
     Result := 'NmCmp'
   else

@@ -43,7 +43,7 @@ begin
   
   Execute(
     'alter table ' + DecorDsName + ' ' +
-    'add foreign key (' + Entity.DatasetName + 'Id) ' +
+    'add foreign key (' + Entity.RefFldName + ') ' +
     'references ' + Entity.DecorDsName + ' (' + Entity.FieldName('Id') + ')' +
     'on delete cascade'
   );
@@ -64,7 +64,7 @@ begin
   // Идентификатор сущности, например, роль или группа пользователей,
   // которых могут создавать иерархии
   Result := TextUtils.ConcatStr(Result,
-    Entity.DatasetName + 'Id Integer not null' , ', ');
+    Entity.RefFldName + ' Integer not null' , ', ');
 end;
 
 end.

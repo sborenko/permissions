@@ -6,6 +6,16 @@ uses
   DbTables;
 
 type
+  TItemAddDelEvent = procedure(ItemId: Integer) of object;
+  TItemAddDelEvents = array of TItemAddDelEvent;
+  
+  TIdObject = class
+    Id: Integer;
+  public
+    constructor Create(Id: Integer); reintroduce;
+    destructor Destroy; override;
+  end;
+
   TItem = class
   private
     procedure RunTblDDLStmt(Stmt: ShortString; IfExists: Boolean);
@@ -25,12 +35,25 @@ type
     procedure DropTable; virtual;
 
     function FieldName(Name: ShortString): ShortString; virtual;
+    function RefFldName: ShortString;
   end;
 
 implementation
 
 uses
   Classes, QryLib, SysUtils, TextLib;
+
+//------------------------------------------------------------------------------
+constructor TIdObject.Create(Id: Integer);
+begin
+  Self.Id := Id;
+end;
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+destructor TIdObject.Destroy;
+begin
+  inherited Destroy;
+end;
 
 //------------------------------------------------------------------------------
 procedure TItem.CreateTable;
@@ -144,6 +167,14 @@ end;
 function TItem.FieldName(Name: ShortString): ShortString;
 begin
   Result := Name;
+end;
+
+//------------------------------------------------------------------------------
+// Имя Id-поля для ссылок на элемент из других таблиц
+//------------------------------------------------------------------------------
+function TItem.RefFldName: ShortString;
+begin
+  Result := DatasetName + FieldName('Id');
 end;
 
 //------------------------------------------------------------------------------

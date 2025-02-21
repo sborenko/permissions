@@ -29,7 +29,8 @@ uses
   VersionInfo in '..\Common\VersionInfo\VersionInfo.pas',
   CdsLib in '..\Common\CdsLib.pas',
   FormRoleList in 'SRC\FormRoleList.pas' {FrmRoleList},
-  FormEditPerm in 'SRC\FormEditPerm.pas' {FrmEditPerm};
+  FormEditPerm in 'SRC\FormEditPerm.pas' {FrmEditPerm},
+  CustCheckListBox in 'SRC\CustCheckListBox.pas';
 
 {$R *.res}
 

@@ -1,9 +1,9 @@
 object FrmPermList: TFrmPermList
-  Left = 75
-  Top = 122
-  Width = 1107
-  Height = 709
-  Caption = 'Permission List'
+  Left = 138
+  Top = 71
+  Width = 964
+  Height = 640
+  Caption = 'Permissions'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,21 +19,21 @@ object FrmPermList: TFrmPermList
   PixelsPerInch = 96
   TextHeight = 13
   object SplitterMain: TSplitter
-    Left = 553
+    Left = 449
     Top = 0
-    Height = 629
+    Height = 560
   end
   object PanelRight: TPanel
-    Left = 556
+    Left = 452
     Top = 0
-    Width = 535
-    Height = 629
+    Width = 496
+    Height = 560
     Align = alClient
     TabOrder = 0
     object SplitterRight: TSplitter
       Left = 1
       Top = 153
-      Width = 533
+      Width = 494
       Height = 5
       Cursor = crVSplit
       Align = alTop
@@ -42,14 +42,14 @@ object FrmPermList: TFrmPermList
     object PanelAffApps: TPanel
       Left = 1
       Top = 1
-      Width = 533
+      Width = 494
       Height = 152
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
       OnResize = PanelAffAppsResize
       DesignSize = (
-        533
+        494
         152)
       object LblAffectedApps: TLabel
         Left = 8
@@ -61,28 +61,35 @@ object FrmPermList: TFrmPermList
       object ChLstBxAffApps: TCheckListBox
         Left = 0
         Top = 24
-        Width = 534
+        Width = 495
         Height = 125
         OnClickCheck = ChLstBxAffAppsClickCheck
         Anchors = [akLeft, akTop, akRight, akBottom]
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Consolas'
+        Font.Style = []
         ItemHeight = 13
+        ParentFont = False
         PopupMenu = PopupAffApps
+        Sorted = True
         TabOrder = 0
       end
     end
     object PanelGrantUsrs: TPanel
       Left = 1
       Top = 158
-      Width = 533
-      Height = 470
+      Width = 494
+      Height = 401
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       object PageCtrlGrantPerms: TPageControl
         Left = 0
         Top = 0
-        Width = 533
-        Height = 470
+        Width = 494
+        Height = 401
         ActivePage = TabGrantUsrs
         Align = alClient
         PopupMenu = PopupGrantPerm
@@ -96,15 +103,23 @@ object FrmPermList: TFrmPermList
           ImageIndex = 1
           OnResize = TabGrantUsrsResize
           DesignSize = (
-            525
-            439)
-          object ChLstBxUsrPermApps: TCheckListBox
+            486
+            370)
+          object ChLstBxUsrApps: TCheckListBox
             Left = 0
             Top = 0
-            Width = 534
-            Height = 441
+            Width = 486
+            Height = 370
+            OnClickCheck = ChLstBxUsrAppsClickCheck
             Anchors = [akLeft, akTop, akRight, akBottom]
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Consolas'
+            Font.Style = []
             ItemHeight = 13
+            ParentFont = False
+            Sorted = True
             TabOrder = 0
           end
         end
@@ -117,8 +132,8 @@ object FrmPermList: TFrmPermList
   end
   object PanelBottom: TPanel
     Left = 0
-    Top = 629
-    Width = 1091
+    Top = 560
+    Width = 948
     Height = 41
     Align = alBottom
     TabOrder = 1
@@ -126,26 +141,37 @@ object FrmPermList: TFrmPermList
   object PanelPerms: TPanel
     Left = 0
     Top = 0
-    Width = 553
-    Height = 629
+    Width = 449
+    Height = 560
     Align = alLeft
     TabOrder = 2
     OnResize = PanelPermsResize
     DesignSize = (
-      553
-      629)
+      449
+      560)
     object LblFilter: TLabel
       Left = 8
       Top = 8
-      Width = 22
+      Width = 44
       Height = 13
-      Caption = 'Filter'
+      Caption = 'App Filter'
+    end
+    object BtnClearAppFilter: TSpeedButton
+      Left = 424
+      Top = 7
+      Width = 23
+      Height = 22
+      Hint = 'Clear App Filter'
+      Caption = '...'
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = BtnClearAppFilterClick
     end
     object DbgrPerms: TDBGrid
-      Left = 2
+      Left = 1
       Top = 32
-      Width = 542
-      Height = 594
+      Width = 447
+      Height = 525
       Anchors = [akLeft, akTop, akRight, akBottom]
       DataSource = DsrcPerms
       PopupMenu = PopupPerms
@@ -156,18 +182,20 @@ object FrmPermList: TFrmPermList
       TitleFont.Name = 'MS Sans Serif'
       TitleFont.Style = []
     end
-    object DbCmbBoxAppFilter: TDBComboBox
-      Left = 42
+    object ComboAppFilter: TDBLookupComboBox
+      Left = 64
       Top = 8
-      Width = 502
+      Width = 353
       Height = 21
       Anchors = [akLeft, akTop, akRight]
-      ItemHeight = 13
+      KeyField = 'NR'
+      ListField = 'NMCMP'
+      ListSource = DsrcAppFilter
       TabOrder = 1
+      OnClick = ComboAppFilterClick
     end
   end
   object DsrcPerms: TDataSource
-    OnDataChange = DsrcPermsDataChange
     Left = 24
     Top = 80
   end
@@ -211,5 +239,14 @@ object FrmPermList: TFrmPermList
       '')
     Left = 581
     Top = 41
+  end
+  object QryAppFilter: TQuery
+    Left = 288
+    Top = 48
+  end
+  object DsrcAppFilter: TDataSource
+    DataSet = QryAppFilter
+    Left = 328
+    Top = 48
   end
 end
