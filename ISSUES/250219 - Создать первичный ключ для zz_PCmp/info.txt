@@ -1,0 +1,11 @@
+
+Создать в базе данных ES_OPI первичный ключ для zz_PCmp по полю Nr.
+
+// Установить поле NR в NOT NULL:
+
+UPDATE RDB$RELATION_FIELDS SET RDB$NULL_FLAG = 1
+WHERE RDB$FIELD_NAME = 'NR' AND RDB$RELATION_NAME = 'ZZ_PCMP';
+
+// Создать PK:
+
+ALTER TABLE ZZ_PCMP ADD PRIMARY KEY (NR);

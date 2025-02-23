@@ -10,18 +10,18 @@ File_7=SourceModule,'E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.dfm',0,1,1,1,1
 File_8=SourceModule,'e:\program files (x86)\borland\delphi7\source\vcl\CheckLst.pas',0,1,16,1,20,0,0
 
 [Modules]
-Module0=E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
+Module0=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
 Module1=E:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr
-Module2=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
-Module3=E:\OPI\PROJECTS\PERMISSIONS\Src\FormMain.pas
+Module2=E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
+Module3=E:\OPI\PROJECTS\PERMISSIONS\SRC\CustCheckListBox.pas
 Module4=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\App.pas
-Module5=E:\OPI\PROJECTS\PERMISSIONS\SRC\CustCheckListBox.pas
+Module5=E:\OPI\PROJECTS\PERMISSIONS\Src\FormMain.pas
 Count=6
 EditWindowCount=1
 
-[E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas]
+[E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas]
 ModuleType=SourceModule
-FormState=1
+FormState=0
 FormOnTop=0
 
 [E:\OPI\PROJECTS\PERMISSIONS\Permissions.dpr]
@@ -29,12 +29,12 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas]
+[E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas]
 ModuleType=SourceModule
-FormState=0
+FormState=1
 FormOnTop=0
 
-[E:\OPI\PROJECTS\PERMISSIONS\Src\FormMain.pas]
+[E:\OPI\PROJECTS\PERMISSIONS\SRC\CustCheckListBox.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -44,7 +44,7 @@ ModuleType=SourceModule
 FormState=0
 FormOnTop=0
 
-[E:\OPI\PROJECTS\PERMISSIONS\SRC\CustCheckListBox.pas]
+[E:\OPI\PROJECTS\PERMISSIONS\Src\FormMain.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -55,7 +55,7 @@ FormOnTop=0
 
 [EditWindow0]
 ViewCount=6
-CurrentView=0
+CurrentView=4
 View0=0
 View1=1
 View2=2
@@ -81,14 +81,14 @@ LeftPanelSize=256
 LeftPanelClients=DockSite0
 LeftPanelData=0000040000000000A401000000000000001B010000000000000100000000A401000009000000446F636B5369746530FFFFFFFF
 RightPanelSize=0
-BottomPanelSize=0
+BottomPanelSize=163
 BottomPanelClients=MessageView@EditWindow0
-BottomPanelData=00000400010000000B0000004D6573736167655669657700000000000000000000000000000000000100000000000000000B0000004D65737361676556696577FFFFFFFF
+BottomPanelData=000004000000000000000000000000000000000000000000000100000000000000000B0000004D65737361676556696577FFFFFFFF
 
 [View0]
 Module=E:\OPI\PROJECTS\PERMISSIONS\Src\FormPermList.pas
-CursorX=28
-CursorY=4
+CursorX=1
+CursorY=11
 TopLine=1
 LeftCol=1
 
@@ -115,9 +115,9 @@ LeftCol=1
 
 [View4]
 Module=E:\OPI\PROJECTS\PERMISSIONS\Src\Types\Permission.pas
-CursorX=3
-CursorY=361
-TopLine=351
+CursorX=53
+CursorY=9
+TopLine=1
 LeftCol=1
 
 [View5]
@@ -148,11 +148,11 @@ State=0
 Left=0
 Top=0
 Width=248
-Height=589
+Height=423
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=248
-ClientHeight=589
+ClientHeight=423
 TBDockHeight=149
 LRDockWidth=421
 Dockable=1
@@ -166,16 +166,14 @@ Count=0
 [Main Window]
 Create=1
 Visible=1
-State=2
-Left=0
+State=0
+Left=-7
 Top=0
 Width=1366
 Height=123
 MaxLeft=-1
 MaxTop=-1
-MaxWidth=1382
-MaxHeight=123
-ClientWidth=1366
+ClientWidth=1350
 ClientHeight=84
 
 [ProjectManager]
@@ -244,8 +242,8 @@ ClientHeight=60
 Create=1
 Visible=1
 State=0
-Left=742
-Top=96
+Left=631
+Top=99
 Width=328
 Height=639
 MaxLeft=-1
@@ -257,8 +255,8 @@ LRDockWidth=284
 Dockable=0
 SplitPos=128
 ArrangeBy=Name
-SelectedItem=Name
-ExpandedItems=Anchors,DataSet.UpdateObject,Title
+SelectedItem=Caption
+ExpandedItems=Anchors,Constraints,DataSet.UpdateObject,Font.Style,Title
 HiddenCategories=
 
 [BreakpointWindow]
@@ -268,11 +266,11 @@ State=0
 Left=0
 Top=0
 Width=248
-Height=589
+Height=423
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=248
-ClientHeight=589
+ClientHeight=423
 TBDockHeight=688
 LRDockWidth=511
 Dockable=1
@@ -290,11 +288,11 @@ State=0
 Left=0
 Top=0
 Width=248
-Height=589
+Height=423
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=248
-ClientHeight=589
+ClientHeight=423
 TBDockHeight=688
 LRDockWidth=283
 Dockable=1
@@ -429,28 +427,28 @@ State=0
 Left=0
 Top=0
 Width=248
-Height=589
+Height=423
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=248
-ClientHeight=589
+ClientHeight=423
 TBDockHeight=305
 LRDockWidth=192
 Dockable=1
 
 [MessageView@EditWindow0]
 Create=1
-Visible=0
+Visible=1
 State=0
 Left=12
 Top=0
 Width=1354
-Height=159
+Height=163
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1354
-ClientHeight=159
-TBDockHeight=159
+ClientHeight=163
+TBDockHeight=163
 LRDockWidth=443
 Dockable=1
 
@@ -465,15 +463,15 @@ State=0
 Left=0
 Top=12
 Width=256
-Height=618
+Height=452
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=256
-ClientHeight=618
+ClientHeight=452
 TBDockHeight=94
 LRDockWidth=256
 Dockable=1
 TabPosition=0
-ActiveTab=Call Stack
+ActiveTab=Watch List
 TabDockClients=CodeExplorer@EditWindow0,BreakpointWindow,CallStackWindow,WatchWindow
 
