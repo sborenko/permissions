@@ -15,12 +15,21 @@ type
     procedure Change; virtual;
     procedure SetItemIndex(const Value: Integer); override;
   published
+    constructor Create(AOwner: TComponent); override;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
 
     function GetSelectedIndx: Integer;
+    procedure ForceSelection;
   end;
 
 implementation
+
+//------------------------------------------------------------------------------
+constructor TCheckListBox.Create(AOwner: TComponent);
+begin
+  inherited;
+  FItemIndex := -1;
+end;
 
 //------------------------------------------------------------------------------
 procedure TCheckListBox.CNCommand(var AMessage: TWMCommand);
@@ -33,6 +42,13 @@ begin
     FItemIndex := ItemIndex;
     Change;
   end;
+end;
+
+//------------------------------------------------------------------------------
+procedure TCheckListBox.ForceSelection;
+begin
+  if Items.Count > 0 then
+    SetItemIndex(0);
 end;
 
 //------------------------------------------------------------------------------

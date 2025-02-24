@@ -45,7 +45,7 @@ var
   Perm: TPerm;
   App: TApp;
 begin
-  // Готовим объекты
+  // Готовим фабрики
   UsrGroup := TUsrGroup.Create;
   User := TUser.Create;
   Role := TRole.Create;
@@ -72,7 +72,7 @@ begin
   UsrGroup.CreateTable;
   }
 
-  // Удаляем объекты
+  // Удаляем фабрики
   UsrGroup.Free;
   User.Free;
   Role.Free;
